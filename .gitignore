@@ -1,4 +1,9 @@
+# Vim usage files
 *.sw?
+
+# SASS usage files
 .sass-cache
 *.css.map
+
+# MacOS directory files
 .DS_Store
