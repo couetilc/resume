@@ -1,16 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display|Lato');
 
-$bg-color: #a7cbf9;
-$tempc:#5698CE;
 $ivory: #fffff0;
-$bg-gradient: linear-gradient(45deg, #726193 20%, #e37b7c 60%, #ffe4b4);
 $bg-painting: url('../img/bg_monet.jpg');
 
 body {
     display: flex;
     justify-content: center;
-    //background: linear-gradient(to bottom right, #3B6F9B, #5698CE);
-    //background: $bg-gradient;
     background-image: $bg-painting;
     background-size: cover;
     font-family: 'Lato', Times, sans-serif;
@@ -29,7 +24,6 @@ body {
 section {
     display: flex;
     margin: 1em 0em;
-    //border: 2px solid red;
     flex: 1;
     flex-direction: column;
 
@@ -39,15 +33,22 @@ section {
         margin: 0;
     }
 
+    h2 {
+       font-size: 1em;
+       margin: 0;
+       display: inline-block;
+       font-weight: bold;
+    }
+
     p {
         font-size: 1em;
         font-family: Tahoma;
-        margin: 0px;
+        margin: 0;
         font-style: italic;
     }
 
     ul {
-        margin: 0px;
+        margin: 0;
     }
 }
 
@@ -59,7 +60,7 @@ section.banner {
 
     h1 {
         font-family: 'Playfair Display';
-        margin: 0px;
+        margin: 0;
         font-size: 3.5em;
     }
 

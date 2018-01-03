@@ -24,13 +24,18 @@ section {
     font-family: Helvetica, serif;
     font-size: 1.25em;
     margin: 0; }
+  section h2 {
+    font-size: 1em;
+    margin: 0;
+    display: inline-block;
+    font-weight: bold; }
   section p {
     font-size: 1em;
     font-family: Tahoma;
-    margin: 0px;
+    margin: 0;
     font-style: italic; }
   section ul {
-    margin: 0px; }
+    margin: 0; }
 
 section.banner {
   flex-direction: row;
@@ -39,7 +44,7 @@ section.banner {
   align-content: flex-start; }
   section.banner h1 {
     font-family: 'Playfair Display';
-    margin: 0px;
+    margin: 0;
     font-size: 3.5em; }
   section.banner #address {
     text-align: right; }
