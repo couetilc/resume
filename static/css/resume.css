@@ -2,7 +2,7 @@
 body {
   display: flex;
   justify-content: center;
-  background-image: url("media/bg_monet.jpg");
+  background-image: url("../img/bg_monet.jpg");
   background-size: cover;
   font-family: 'Lato', Times, sans-serif; }
 
