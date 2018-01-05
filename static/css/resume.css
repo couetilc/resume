@@ -57,6 +57,9 @@ div.organization {
 div.entry {
   margin: .5em 0em; }
 
+span.divider {
+  margin: 0em .5em; }
+
 /* Tablet Screens */
 @media all and (max-width: 800px) {
   #resume {
