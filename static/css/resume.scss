@@ -33,13 +33,6 @@ section {
         margin: 0;
     }
 
-    h2 {
-       font-size: 1em;
-       margin: 0;
-       display: inline-block;
-       font-weight: bold;
-    }
-
     p {
         font-size: 1em;
         font-family: Tahoma;
@@ -77,6 +70,11 @@ section.banner {
 div.organization {
     display: flex;
     justify-content: space-between;
+
+    span b {
+        font-size: 1.08em;
+        font-weight: bold;
+    }
 }
 
 div.entry {

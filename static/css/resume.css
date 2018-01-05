@@ -24,11 +24,6 @@ section {
     font-family: Helvetica, serif;
     font-size: 1.25em;
     margin: 0; }
-  section h2 {
-    font-size: 1em;
-    margin: 0;
-    display: inline-block;
-    font-weight: bold; }
   section p {
     font-size: 1em;
     font-family: Tahoma;
@@ -55,6 +50,9 @@ section.banner {
 div.organization {
   display: flex;
   justify-content: space-between; }
+  div.organization span b {
+    font-size: 1.08em;
+    font-weight: bold; }
 
 div.entry {
   margin: .5em 0em; }
