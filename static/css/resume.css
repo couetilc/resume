@@ -47,17 +47,44 @@ section.banner {
       font-size: 1.25em;
       text-decoration: underline; }
 
-div.organization {
+div.org {
   display: flex;
+  flex-flow: row wrap;
   justify-content: space-between; }
-  div.organization span b {
-    font-size: 1.08em;
-    font-weight: bold; }
-
 div.entry {
   margin: .5em 0em; }
 
-span.divider {
+span b {
+  font-size: 1.08em;
+  font-weight: bold; }
+span.org-name {
+  flex: 0 1 auto; }
+span.org-loc {
+  flex: 0 2 auto; }
+span.org-loc:before {
+  content: ">";
+  font-size: 1.08em;
+  font-weight: bold;
+  margin: 0em .5em;
+  padding: 0em; }
+span.left-align {
+  display: flex;
+  flex: 0 1 auto;
+  justify-content: flex-start; }
+span.right-align {
+  display: flex;
+  flex-flow: row wrap;
+  flex: 1 1 auto;
+  justify-content: space-between; }
+span.org-date {
+  display: flex;
+  flex: 0 2 auto;
+  justify-content: flex-end; }
+span.divider-circle {
+  flex: 0 2 auto;
+  margin: 0em .5em; }
+span.divider-line {
+  flex: 0 2 auto;
   margin: 0em .5em; }
 
 /* Tablet Screens */

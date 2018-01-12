@@ -67,24 +67,69 @@ section.banner {
     }
 }
 
-div.organization {
-    display: flex;
-    justify-content: space-between;
+div {
+    &.org {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+    }
 
-    span b {
-        font-size: 1.08em;
-        font-weight: bold;
+    &.entry {
+        margin: .5em 0em;
     }
 }
 
-div.entry {
-    margin: .5em 0em;
-}
+span {
+    b {
+        font-size: 1.08em;
+        font-weight:bold;
+    }
 
-span.divider {
-    margin: 0em .5em;
-}
+    &.org-name {
+        flex: 0 1 auto;
+    }
+    
+    &.org-loc {
+        flex: 0 2 auto;
+    }
 
+    &.org-loc:before {
+        content: ">";
+        font-size: 1.08em;
+        font-weight:bold;
+        margin: 0em .5em;
+        padding: 0em;
+    }
+
+    &.left-align {
+        display: flex;
+        flex: 0 1 auto;
+        justify-content: flex-start;
+    }
+
+    &.right-align {
+        display: flex;
+        flex-flow: row wrap;
+        flex: 1 1 auto;
+        justify-content: space-between;
+    }
+
+    &.org-date {
+        display: flex;
+        flex: 0 2 auto;
+        justify-content: flex-end;
+    }
+
+    &.divider-circle {
+        flex: 0 2 auto;
+        margin: 0em .5em;
+    }
+
+    &.divider-line {
+        flex: 0 2 auto;
+        margin: 0em .5em;
+    }
+}
 
 /* Tablet Screens */
 @media all and (max-width: 800px) {
