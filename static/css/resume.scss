@@ -30,12 +30,13 @@ section {
     h1 {
         font-family: Helvetica, serif;
         font-size: 1.25em;
+        font-weight: 700;
         margin: 0;
     }
 
     p {
         font-size: 1em;
-        font-family: Tahoma;
+        font-family: Tahoma, sans-serif;
         margin: 0;
         font-style: italic;
     }
@@ -43,29 +44,34 @@ section {
     ul {
         margin: 0;
     }
-}
 
-section.banner {
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    align-entrys: flex-start;
-    align-content: flex-start;
-
-    h1 {
-        font-family: 'Playfair Display';
-        margin: 0;
-        font-size: 3.5em;
-    }
-
-    #address {
-        text-align: right;
+    &.banner {
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-entries: flex-start;
+        align-content: flex-start;
 
         h1 {
-            font-size: 1.25em;
-            text-decoration: underline;
+            font-family: 'Playfair Display', Times, serif;
+            margin: 0;
+            font-size: 3.5em;
+        }
+
+        #address {
+            text-align: right;
+
+            h1 {
+                font-size: 1.25em;
+                text-decoration: underline;
+            }
         }
     }
+
+    &.tech-skills {
+    }
+
 }
+
 
 div {
     &.org {
@@ -131,6 +137,58 @@ span {
         flex: 0 2 auto;
         margin: 0em .5em;
         content: "|";
+    }
+
+    &.divider-colon:after {
+        flex: 0 2 auto;
+        margin: 0em .5em;
+        content: ":";
+    }
+}
+
+ul {
+    &.skill-type {
+        list-style: none;
+        display: flex;
+        flex-flow: column nowrap;
+        padding: 0em;
+        margin: 0em .5em;
+
+        span.type-name {
+           font-size: 1em;
+           text-align: right;
+           width: 30%;
+
+        }
+     }
+
+     &.skill-type > li {
+        display: flex;
+        flex-flow: row nowrap;
+        margin: .1em 0em;
+
+        ul.skill-item {
+            list-style: none;
+            display: flex;
+            flex-flow: row wrap;
+            padding: 0em;
+            margin: 0em;
+            width: 70%;
+        }
+
+        ul.skill-item > li {
+            font-size: 1em;
+        }
+        ul.skill-item > li:nth-child(1)::before {
+            content: "";
+            margin: 0em .25em;
+            padding: 0em;
+        }
+        ul.skill-item > li:nth-child(n+2)::before {
+            content: "○";
+            margin: 0em .5em;
+            padding: 0em;
+        }
     }
 }
 
