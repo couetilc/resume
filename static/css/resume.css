@@ -54,6 +54,16 @@ div.org {
   justify-content: space-between; }
 div.entry {
   margin: .5em 0em; }
+div.two-column {
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%; }
+  div.two-column > span.column {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    text-align: center;
+    width: 50%; }
 
 span b {
   font-size: 1.08em;
@@ -84,7 +94,7 @@ span.org-date {
   text-align: right; }
 span.divider-circle:after {
   flex: 0 2 auto;
-  margin: 0em .5em;
+  margin: 0em .25em;
   content: "○"; }
 span.divider-line:after {
   flex: 0 2 auto;
@@ -92,19 +102,35 @@ span.divider-line:after {
   content: "|"; }
 span.divider-colon:after {
   flex: 0 2 auto;
-  margin: 0em .5em;
+  margin: 0em 0em 0em .5em;
   content: ":"; }
+span.project {
+  align-items: center; }
+  span.project > h2 {
+    font-size: 1.1em;
+    margin: 0;
+    padding: 0; }
+  span.project > .summary {
+    font-style: italic; }
+  span.project > .stack {
+    display: flex;
+    flex-flow: row nowrap;
+    list-style: none; }
+    span.project > .stack > li:nth-child(n+2)::before {
+      content: "○";
+      margin: 0em .25em; }
 
 ul.skill-type {
   list-style: none;
   display: flex;
   flex-flow: column nowrap;
   padding: 0em;
-  margin: 0em .5em; }
+  margin: 0em; }
   ul.skill-type span.type-name {
     font-size: 1em;
     text-align: right;
-    width: 15%; }
+    /*margin: 0em 0em 0em 1em;*/
+    width: 12%; }
 ul.skill-type > li {
   display: flex;
   flex-flow: row nowrap;
@@ -115,7 +141,7 @@ ul.skill-type > li {
     flex-flow: row wrap;
     padding: 0em;
     margin: 0em;
-    width: 85%; }
+    width: 88%; }
   ul.skill-type > li ul.skill-item > li {
     font-size: 1em; }
   ul.skill-type > li ul.skill-item > li:nth-child(1)::before {
