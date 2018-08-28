@@ -83,6 +83,10 @@ div {
         margin: .5em 0em;
     }
 
+    &.job {
+        margin: 0em 0em .5em 0em;
+    }
+
     &.two-column {
         display: flex;
         flex-flow: row nowrap;
@@ -105,11 +109,11 @@ span {
     }
 
     &.org-name {
-        flex: 0 1 auto;
+        flex: 0 0 auto;
     }
     
     &.org-loc {
-        flex: 0 2 auto;
+        flex: 0 0 auto;
     }
 
     &.org-loc:before {
@@ -243,4 +247,7 @@ ul {
 @media all and (max-width: 400px) {
     #resume {
     }
+}
+
+@media print {
 }

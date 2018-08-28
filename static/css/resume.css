@@ -54,6 +54,8 @@ div.org {
   justify-content: space-between; }
 div.entry {
   margin: .5em 0em; }
+div.job {
+  margin: 0em 0em .5em 0em; }
 div.two-column {
   display: flex;
   flex-flow: row nowrap;
@@ -69,9 +71,9 @@ span b {
   font-size: 1.08em;
   font-weight: bold; }
 span.org-name {
-  flex: 0 1 auto; }
+  flex: 0 0 auto; }
 span.org-loc {
-  flex: 0 2 auto; }
+  flex: 0 0 auto; }
 span.org-loc:before {
   content: ">";
   font-size: 1.08em;
