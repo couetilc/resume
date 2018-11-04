@@ -179,6 +179,7 @@ span {
             display: flex;
             flex-flow: row nowrap;
             list-style: none;
+            padding: 0;
 
             & > li:nth-child(n+2)::before {
                 content: "○";

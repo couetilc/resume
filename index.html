@@ -39,7 +39,7 @@
     <div class="entry">
         <div class="org">
             <span class="left-align">
-                <span class="org-name"><b>Software Engineer</b></span>
+                <span class="org-name"><b>Cloud Software Consulting</b></span>
                 <span class="org-loc">New York, NY</span>
             </span>
             <span class="right-align">
@@ -48,26 +48,26 @@
         </div>
 
         <div class="job">
-            <p>Developed automated transcription and notification software for audio files archived by a business podcast.</p>
+            <p>Developed automated transcription & notification software managing audio files archived by a business podcast.</p>
             <ul>
-                <li>Creates an Amazon Web Service (AWS) Lambda function running Node.js that listens whenever an audio file is added to an S3 bucket, sending an API request to AWS Transcribe to process the audio file.</li>
-                <li>Parses JSON responses for transcript, pushes to S3, and formats with HTML/CSS before emailing user.</li>
+                <li>Created Amazon Web Service (AWS) Lambda functions running Node.js that ensure audio files in S3 are sent to AWS Transcribe for processing. Transcripts are formatted and emailed to users through SNS.</li>
+                <li>Wrote Node.js scripts to process archives in S3, and Bash utilities to deploy and control services.</li>
             </ul>
         </div>
 
         <div class="job">
-            <p>Designed responsive web site (HTML5/CSS3/SASS) allowing clients to pay for and connect with equine experts.</p>
+            <p>Designed responsive web site allowing clients to request services from veterinarians <a href="https://equinelungexperts.com">(equinelungexperts.com)</a>.</p>
             <ul>
-                <li>React JS client app is served by Nginx with a Node.js REST API for managing AWS and payment services</li>
-                <li>Deployed apps in Docker containers on an EC2 instance, implementing CI/CD with Jenkins and Git.</li>
+                <li>Serves ReactJS single page application using AWS Cloudfront CDN with a REST API Gateway layer that invokes Node.js Lambda functions used for contacting consultants through AWS SNS.</li>
+                <li>Designed web page using Sketch, managed CSS using SASS and Webpack, and wrote marketing copy.</li>
             </ul>
         </div>
 
         <div class="job">
-            <p>Designed web portfolio powered by Amazon Web Services for a Brooklyn artist applying to shows and festivals.</p>
+            <p>Designed updateable web portfolio for a Brooklyn artist applying to shows and festivals <a href="https://olgaanastasiaart.com">(olgaanastasiaart.com)</a>.</p>
             <ul>
                 <li>Used Node.js running in AWS Lambda to generate HTML from Nunjucks templates whenever artwork metadata is added to a DynamoDB database.  Artist instantly updates by adding artwork to S3.</li>
-                <li>Serverless architecture optimizes images for all devices, responsive web design supported by SASS.</li>
+                <li>Cloudfront CDN serves assets, Sharp+Lambda optimize images for devices, responsive design uses SASS.</li>
             </ul>
         </div>
 
@@ -91,8 +91,8 @@
         </div>
         <p>Marketing Analytics Intern for global financial technology company offering online consumer & small business lending</p>
         <ul>
-            <li>Built logistic regression, gradient boosting and random forest models in R and Python to sort customers into email campaigns optimizing marketing spend, trained on data in a PostreSQL database.</li>
-            <li>Measured >2% growth in email customer retention, data showed mobile had significant engagement.</li>
+            <li>Built logistic regression, gradient boosted and random forest models in R and Python to sort customers into email campaigns optimizing marketing spend, trained on data in a PostgreSQL database.</li>
+            <li>Measured ~2% growth in email customer retention, data showed mobile had significant engagement.</li>
         </ul>
     </div>
 
@@ -108,8 +108,8 @@
         </div>
         <p>Intern for a leading franchise consulting firm focused on recruiting high potential individuals to start franchises.</p>
         <ul>
-            <li>Converted franchisee recruiting process from Excel sheets attached to emails into a Wordpress plugin, enhancing onboarding experience using HTML/CSS formatted notification emails and PHP with Javascript for form validation, while securing user data in a MySQL database.</li>
-            <li>Decreased website loading time by ~30% by integrating a CDN and build additional web content.</li>
+            <li>Converted recruiting process from Excel sheets attached to emails into a Wordpress plugin with HTML/CSS formatted notification emails, PHP and Javascript for form validation, and storage in MySQL.</li>
+            <li>Decreased website loading time by ~30% by integrating a CDN and built web content (blogs, quizzes).</li>
         </ul>
     </div>
 
@@ -130,6 +130,55 @@
     </div>
 </section>
 
+<section class="category" id="tech-skills">
+    <h1>HACKATHONS</h1>
+    <div class="two-column">
+        <span class="column project">
+            <h2>NASA Space Apps 2018</h2>
+            <span class="summary">Babblenauts</span>
+            <span class="summary"> (Winner "Most Inspirational")</span>
+            <ul class="stack">
+                <li>ReactJS</li>
+                <li>Node.js</li>
+                <li>OpenSpace</li>
+            </ul>
+            <ul class="stack">
+            </ul>
+        </span>
+
+        <span class="column project">
+            <h2>New York SexTech 2018</h2>
+            <span class="summary">
+                Marco Finds Polo
+            </span>
+            <ul class="stack">
+                <li>ReactJS</li>
+                <li>Node.js</li>
+                <li>Socket.io</li>
+            </ul>
+            <ul class="stack">
+                <li>AWS DynamoDB</li>
+                <li>Digital Ocean</li>
+            </ul>
+        </span>
+
+        <span class="column project">
+            <h2>AT&T Entertainment 2018</h2>
+            <span class="summary">
+                Ahhhhhhhh!
+            </span>
+            <ul class="stack">
+                <li>Unity</li>
+                <li>WebGL</li>
+            </ul>
+            <ul class="stack">
+                <li>Windows Speech Recognition API</li>
+            </ul>
+        </span>
+    </div>
+</section>
+
+
 <section class="category" id="research">
     <h1>RESEARCH EXPERIENCE</h1>
 
@@ -145,7 +194,7 @@
         </div>
         <p>Co-author “Engineering Students' Misuse of Business Concepts: Understanding Problematic Precursors to Entrepreneurship” presented at the 2017 American Society for Engineering Education Annual Conference.</p>
         <ul>
-            <li>Measured 40 university engineering students’ understanding of business concepts and value creation using QDA Miner, a qualitative data analysis tool specialized for transcripts.</li>
+            <li>Analyzed engineering students’ transcripts using QDA Miner, a qualitative data analysis tool.</li>
         </ul>
     </div>
 
@@ -169,47 +218,6 @@
         </ul>
     </div>
 </section>
-
-<section class="category" id="tech-skills">
-    <h1>DEPLOYED PROJECTS</h1>
-    <div class="two-column">
-        <span class="column project">
-            <h2><a href="https://olgaanastasiaart.com">olgaanastasiaart.com</a></h2>
-            <span class="summary">
-                Portfolio for Brooklyn artist applying to shows & festivals
-            </span>
-            <ul class="stack">
-                <li>Nginx</li>
-                <li>Node.js</li>
-                <li>AWS (EC2, S3)</li>
-            </ul>
-        </span>
-
-        <span class="column project">
-            <h2><a href="https://couetil.com">couetil.com</a></h2>
-            <span class="summary">
-                Personal website used for business purposes
-            </span>
-            <ul class="stack">
-                <li>Nginx</li>
-                <li>Node.js</li>
-                <li>Digital Ocean</li>
-            </ul>
-        </span>
-
-        <span class="column project">
-            <h2><a href="https://github.com/couetilc/aws-transcribe-audio">aws-transcribe-audio</a></h2>
-            <span class="summary">
-                Lambda functions transcribe S3 uploads
-            </span>
-            <ul class="stack">
-                <li>Node.js</li>
-                <li>AWS (Lambda, S3)</li>
-            </ul>
-        </span>
-    </div>
-</section>
-
 <section class="category" id="tech-skills">
     <h1>TECH SKILLS</h1>
     <ul class="skill-type">
@@ -217,13 +225,13 @@
             <span class="type-name">Languages</span>
             <span class="divider-colon"></span>
             <ul class="skill-item">
-                <li>Javascript</li>
+                <li>Javascript (ES6+)</li>
                 <li>Python</li>
                 <li>R</li>
                 <li>C/C++</li>
                 <li>Java</li>
                 <li>HTML5/CSS3</li>
-                <li>SQL</li>
+                <li>SQL (Postgres, MySQL)</li>
                 <li>PHP</li>
             </ul>
         </li>
@@ -231,11 +239,11 @@
             <span class="type-name">Web Stack</span>
             <span class="divider-colon"></span>
             <ul class="skill-item">
-                <li>Nginx</li>
-                <li>Node.js</li>
                 <li>React</li>
+                <li>Node.js</li>
                 <li>Django</li>
                 <li>Flask</li>
+                <li>Nginx</li>
                 <li>Amazon Web Services</li>
                 <li>Google Cloud</li>
                 <li>Digital Ocean</li>
@@ -248,14 +256,14 @@
             <ul class="skill-item">
                 <li>Ubuntu & Mac</li>
                 <li>Docker</li>
-                <li>Jupyter</li>
-                <li>git</li>
-                <li>bash</li>
+                <li>Git</li>
+                <li>Bash</li>
                 <li>Vim</li>
-                <li>tmux</li>
+                <li>Tmux</li>
                 <li>iTerm2</li>
                 <li>SASS</li>
                 <li>Make</li>
+                <li>Jupyter</li>
             </ul>
         </li>
         <li>
