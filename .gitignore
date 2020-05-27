@@ -1,5 +1,9 @@
 build
 
+# parcel bundler
+.cache
+dist
+
 # Vim usage files
 *.sw?
 
