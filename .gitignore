@@ -1,4 +1,4 @@
-build
+build/
 
 # parcel bundler
 .cache
