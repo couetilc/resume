@@ -251,4 +251,15 @@ ul {
 }
 
 @media print {
+  body {
+    background-image: none;
+  }
+
+  #resume {
+    border: none;
+    background-color: none;
+    box-shadow: none;
+    width: 100%;
+    padding: 0;
+  }
 }

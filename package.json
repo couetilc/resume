@@ -6,6 +6,7 @@
   "scripts": {
     "build": "parcel build src/index.html",
     "dev": "parcel src/index.html",
+    "pdf": "'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless --disable-gpu --print-to-pdf=resume.pdf http://localhost:1234",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
