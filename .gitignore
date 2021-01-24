@@ -1,6 +1,7 @@
 build/
 
 # parcel bundler
+.parcel-cache
 .cache
 dist
 

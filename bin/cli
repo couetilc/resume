@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+command="$1"
+
+case $command in
+  help)
+    echo "CLI tools for developing my résumé"
+    echo "  commands: dev, build, test"
+    ;;
+  dev)
+    (trap 'kill 0' SIGINT; npm run dev:parcel & npm run dev:pdf)
+    ;;
+  build)
+    npm run build:parcel
+    npm run server >/dev/null &
+    pid_server=$!
+    npm run build:pdf
+    kill $pid_server
+    ;;
+  test)
+    echo "no tests"
+    exit 1
+    ;;
+esac
