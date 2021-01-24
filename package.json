@@ -8,11 +8,7 @@
     "dev": "./bin/cli dev",
     "build": "./bin/cli build",
     "test": "./bin/cli test",
-    "build:parcel": "parcel build src/index.html",
-    "build:pdf": "node pdf.js",
-    "dev:parcel": "parcel src/index.html",
-    "dev:pdf": "nodemon -w dist/index.html -x \"time npm run build:pdf\"",
-    "server": "http-server -a localhost -p 1234 dist"
+    "serve": "./bin/cli serve"
   },
   "repository": {
     "type": "git",

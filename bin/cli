@@ -7,19 +7,28 @@ case $command in
     echo "CLI tools for developing my résumé"
     echo "  commands: dev, build, test"
     ;;
+
   dev)
     (trap 'kill 0' SIGINT
-      npm run dev:parcel & npm run dev:pdf)
+    npx parcel src/index.html & npx nodemon -w dist/index.html -x "time node pdf.js")
     ;;
+
   build)
-    npm run build:parcel
-    npm run server >/dev/null &
+    npx parcel build src/index.html
+    npx http-server -a localhost -p 1234 dist >/dev/null &
     pid_server=$!
-    npm run build:pdf
+    node pdf.js
     kill $pid_server
     ;;
+
   test)
     echo "no tests"
     exit 1
+    ;;
+
+  serve)
+    npx parcel build src/index.html
+    npx http-server -a localhost -p 1234 dist &
+    node pdf.js
     ;;
 esac
