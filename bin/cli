@@ -8,7 +8,8 @@ case $command in
     echo "  commands: dev, build, test"
     ;;
   dev)
-    (trap 'kill 0' SIGINT; npm run dev:parcel & npm run dev:pdf)
+    (trap 'kill 0' SIGINT
+      npm run dev:parcel & npm run dev:pdf)
     ;;
   build)
     npm run build:parcel

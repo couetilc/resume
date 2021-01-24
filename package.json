@@ -9,7 +9,7 @@
     "build": "./bin/cli build",
     "test": "./bin/cli test",
     "build:parcel": "parcel build src/index.html",
-    "build:pdf": "'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless --disable-gpu --print-to-pdf=dist/resume.pdf http://localhost:1234",
+    "build:pdf": "node pdf.js",
     "dev:parcel": "parcel src/index.html",
     "dev:pdf": "nodemon -w dist/index.html -x \"time npm run build:pdf\"",
     "server": "http-server -a localhost -p 1234 dist"
@@ -28,6 +28,7 @@
     "http-server": "^0.12.3",
     "nodemon": "^2.0.7",
     "parcel": "^2.0.0-beta.1",
+    "puppeteer": "^5.5.0",
     "sass": "^1.26.5"
   }
 }
