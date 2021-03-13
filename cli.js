@@ -18,7 +18,7 @@ function parseCliArguments(argv = process.argv) {
     die("ERROR: unknown command %o", command);
   }
 
-  for (let arg = args.shift(); args.length > 0; arg = args.shift()) {
+  for (args.shift(); args.length > 0; args.shift()) {
     switch (args[0]) {
       case '-v':
       case '--verbose':
@@ -56,6 +56,14 @@ function parseCliArguments(argv = process.argv) {
           die('ERROR: "--out-pdf" requires an non-empty argument.');
         }
         break;
+      case '--public-url':
+        if (args[1]) {
+          options.publicUrl = args[1];
+          args.shift();
+        } else {
+          die('ERROR: "--public-url" requires an non-empty argument.');
+        }
+        break;
       default:
         console.error("WARN: Uknown option (ignored): %o\n", args[0]);
         break;
@@ -72,19 +80,20 @@ async function run(command, options = {}) {
     outdir = 'dist',
     outfile = 'index.html',
     outpdf = 'resume.pdf',
+    publicUrl = '/',
     verbose = 0,
   } = options;
 
   if (options.verbose > 0) {
     console.log('node version %o', process.version);
-    console.log('arguments: %o', { command, infile, outdir, outfile, outpdf, });
+    console.log('arguments: %o', { command, infile, outdir, outfile, outpdf, publicUrl, verbose });
   }
   if (command === 'help' || !commands.includes(command)) {
     help();
   }
   if (command === "dev") {
     await Promise.all([
-      // TODO replace parcel with webpack
+      // TODO replace parcel with webpack, or use parcel's JS API
       spawnWrapper('npx', ['parcel', infile]),
       // TODO replace nodemon with chokidar
       spawnWrapper('npx', [
@@ -96,15 +105,21 @@ async function run(command, options = {}) {
     die('ERROR: no tests specified');
   }
   if (command === "build") {
-    const server = startStaticServer(path.join('.', outdir));
+    const server = startStaticServer(path.join(__dirname, outdir));
     server.on('listening', async () => {
-      await spawnWrapper('npx', ['parcel', 'build', infile]);
-      await spawnWrapper('node', ['pdf.js']);
+      await spawnWrapper('npx', [
+        'parcel', 'build', path.join(__dirname, infile),
+        '--dist-dir', path.join('.', outdir),
+        '--cache-dir', path.join('.', '.parcel-cache'),
+        '--public-url', publicUrl,
+        '--no-cache'
+      ]);
+      await spawnWrapper('node', [path.join(__dirname, 'pdf.js')]);
       server.close();
     });
   }
   if (command === "serve") {
-    const server = startStaticServer(path.join('.', outdir));
+    const server = startStaticServer(path.join(__dirname, outdir));
     server.on('listening', () => {
       console.log('listening at %o', server.address());
     });

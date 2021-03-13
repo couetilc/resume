@@ -5,13 +5,13 @@
   "html": "dist/index.html",
   "pdf": "dist/resume.pdf",
   "bin": {
-    "resume": "bin/cli.js"
+    "resume": "cli.js"
   },
   "scripts": {
-    "dev": "./bin/cli.js dev",
-    "build": "./bin/cli.js build",
-    "test": "./bin/cli.js test",
-    "serve": "./bin/cli.js serve"
+    "dev": "./cli.js dev",
+    "build": "./cli.js build",
+    "test": "./cli.js test",
+    "serve": "./cli.js serve"
   },
   "repository": {
     "type": "git",
