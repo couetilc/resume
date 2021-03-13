@@ -3,6 +3,8 @@
 /* Global Variables */
 
 $bg-painting: url('./assets/bg_monet.jpg');
+$paper-width: 816px;
+$phone-width: 568px;
 
 /* Design system */
 
@@ -45,13 +47,13 @@ body {
       background-size: cover;
       // - provide a space around the resume on large enough screen widths
       $paddingSize: .5in;
-      $minBound: 816px;
+      $minBound: $paper-width;
       $maxBound: $minBound + 2 * $paddingSize;
       padding: $paddingSize;
-      @media screen and (max-width: $maxBound) {
+      @media (max-width: $maxBound) {
         padding: calc((100% - #{$minBound}) / 2);
       }
-      @media screen and (max-width: $minBound) {
+      @media (max-width: $minBound) {
         padding: 0;
       }
       // - make the resume look like an actual 8.5x11 sheet of paper
@@ -109,15 +111,47 @@ a {
 /* component classes */
 
 .intro {
-  display: grid;
-  grid-template-areas: "left right";
-  > *:first-child {
-    grid-area: left;
-    margin: $space-0;
-    white-space: nowrap;
+  @media (min-width: $phone-width) {
+    display: grid;
+    grid-template-areas: "top top" "mid mid" "left right";
+    gap: $space-1 $space-3;
+    > *:first-child {
+      margin: $space-0;
+      grid-area: top;
+      white-space: nowrap;
+    }
+    > *:nth-child(2) {
+      grid-area: right;
+    }
+    > *:nth-child(3) {
+      // TODO i don't want "resume built by..." to break line, shoud all be on one line
+      grid-area: mid;
+    }
+    > *:nth-child(4) {
+      grid-area: left;
+      text-align: center;
+    }
+    .inline-list > *:nth-child(n+2)::before {
+      padding: $space-0;
+    }
   }
-  > *:nth-child(2) {
-    grid-area: right;
+  @media (min-width: $paper-width) {
+    display: grid;
+    grid-template-areas: "left right" "mid mid" "bot bot";
+    gap: $space-0; // $space-1 $space-3;
+    > *:first-child {
+      grid-area: left;
+      margin: $space-0;
+    }
+    > *:nth-child(2) {
+      grid-area: right;
+    }
+    > *:nth-child(3) {
+      grid-area: mid;
+    }
+    > *:nth-child(4) {
+      grid-area: bot;
+    }
   }
 }
 
