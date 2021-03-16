@@ -8,14 +8,52 @@ const finalhandler = require('finalhandler');
 const puppeteer = require('puppeteer');
 const chokidar = require('chokidar');
 const { performance } = require('perf_hooks');
-const commands = ["help", "dev", "test", "serve", "build",];
+const chalk = require('chalk');
 const log = console.log.bind(console);
+const ul = chalk.underline;
 
 // TODO i think i need to get rid of bundling entirely, and turn my SASS file
 // into a CSS file. any variables can use the new css var feature.
 // How would HMR work then? I could write my websocket client/server that triggers
 // a refresh whenever a change occurs, or I could just set up webpack and have
 // that work. probably the good long term choice.
+
+const commands = {
+  help() {
+    help();
+  },
+  async dev({ outdir, outfile, outpdf,  }) {
+    const watcher = chokidar.watch(path.join(outdir, outfile));
+    watcher.on('change', () => pdf('http://localhost:1234', path.join(outdir, outpdf)));
+    // TODO replace parcel with webpack, or use parcel's JS API
+    await spawnWrapper('npx', ['parcel', infile]);
+    await watcher.close();
+  },
+  test() {
+    die('ERROR: no tests specified');
+  },
+  async build({ infile, outdir, outfile, outpdf, publicUrl }) {
+    const server = startStaticServer(outdir);
+    server.on('listening', async () => {
+      await spawnWrapper('npx', [
+        'parcel', 'build', infile,
+        '--dist-dir', path.join(outdir, path.dirname(outfile)),
+        '--cache-dir', path.join(__dirname, '.parcel-cache'),
+        '--public-url', publicUrl,
+        '--no-cache'
+      ]);
+      await pdf(`http://localhost:${server.address().port}${publicUrl}`, path.join(outdir, outpdf));
+      server.close();
+    });
+  },
+  serve({ outdir }) {
+    const server = startStaticServer(path.join(__dirname, outdir));
+    server.on('listening', () => {
+      console.log('listening at %o', server.address());
+    });
+  }
+}
+
 run.apply(null, parseCliArguments());
 
 function parseCliArguments(argv = process.argv) {
@@ -23,8 +61,8 @@ function parseCliArguments(argv = process.argv) {
   const command = args[0];
   const options = {};
 
-  if (!commands.includes(command)) {
-    die("ERROR: unknown command %o", command);
+  if (!Object.keys(commands).includes(command)) {
+    dieWithHelp("ERROR: unknown command %o", command);
   }
 
   for (args.shift(); args.length > 0; args.shift()) {
@@ -38,7 +76,7 @@ function parseCliArguments(argv = process.argv) {
           options.infile = args[1];
           args.shift();
         } else {
-          die('ERROR: "--in" requires an non-empty argument.');
+          dieWithHelp('ERROR: "--in" requires an non-empty argument.');
         }
         break;
       case '--out':
@@ -46,15 +84,15 @@ function parseCliArguments(argv = process.argv) {
           options.outdir = args[1];
           args.shift();
         } else {
-          die('ERROR: "--out" requires an non-empty argument.');
+          dieWithHelp('ERROR: "--out" requires an non-empty argument.');
         }
         break;
-      case '--out-file':
+      case '--out-html':
         if (args[1]) {
           options.outfile = args[1];
           args.shift();
         } else {
-          die('ERROR: "--out-file" requires an non-empty argument.');
+          dieWithHelp('ERROR: "--out-html" requires an non-empty argument.');
         }
         break;
       case '--out-pdf':
@@ -62,7 +100,7 @@ function parseCliArguments(argv = process.argv) {
           options.outpdf = args[1];
           args.shift();
         } else {
-          die('ERROR: "--out-pdf" requires an non-empty argument.');
+          dieWithHelp('ERROR: "--out-pdf" requires an non-empty argument.');
         }
         break;
       case '--public-url':
@@ -70,7 +108,7 @@ function parseCliArguments(argv = process.argv) {
           options.publicUrl = args[1];
           args.shift();
         } else {
-          die('ERROR: "--public-url" requires an non-empty argument.');
+          dieWithHelp('ERROR: "--public-url" requires an non-empty argument.');
         }
         break;
       default:
@@ -87,7 +125,7 @@ async function run(command, options = {}) {
   const {
     infile = path.join(__dirname, 'src/index.html'),
     outdir = 'dist',
-    outfile = 'index.html',
+    outfile = '.',
     outpdf = 'resume.pdf',
     publicUrl = '/',
     verbose = 0,
@@ -98,41 +136,7 @@ async function run(command, options = {}) {
     console.log('arguments: %o', { command, infile, outdir, outfile, outpdf, publicUrl, verbose });
   }
 
-  // TODO these if statements should be an object and the includes test will
-  // be a test for membership of the command in the commands object.
-  if (command === 'help' || !commands.includes(command)) {
-    help();
-  }
-  if (command === "dev") {
-    const watcher = chokidar.watch(outputFile);
-    watcher.on('change', () => pdf('http://localhost:1234', outputPdf));
-    // TODO replace parcel with webpack, or use parcel's JS API
-    await spawnWrapper('npx', ['parcel', infile]);
-    await watcher.close();
-  }
-  if (command === "test") {
-    die('ERROR: no tests specified');
-  }
-  if (command === "build") {
-    const server = startStaticServer(outdir);
-    server.on('listening', async () => {
-      await spawnWrapper('npx', [
-        'parcel', 'build', infile,
-        '--dist-dir', path.join(outdir, path.dirname(outfile)),
-        '--cache-dir', path.join(__dirname, '.parcel-cache'),
-        '--public-url', publicUrl,
-        '--no-cache'
-      ]);
-      await pdf(`http://localhost:${server.address().port}${publicUrl}`, path.join(outdir, outpdf));
-      server.close();
-    });
-  }
-  if (command === "serve") {
-    const server = startStaticServer(path.join(__dirname, outdir));
-    server.on('listening', () => {
-      console.log('listening at %o', server.address());
-    });
-  }
+  return commands[command]({ infile, outdir, outfile, outpdf, publicUrl, verbose });
 }
 
 class Timer {
@@ -154,6 +158,7 @@ class Timer {
   }
 }
 
+// TODO turn arguments into object
 async function pdf(fromUrl = 'http://localhost:1234', toFile = 'dist/resume.pdf') {
   const timer = new Timer();
   log('🖨️  creating pdf from %o', fromUrl);
@@ -204,6 +209,13 @@ function spawnWrapper(...args) {
 
 function die(...messages) {
   console.error(...messages);
+  help()
+  process.exit(1);
+}
+
+function dieWithHelp(...messages) {
+  console.error(...messages);
+  help()
   process.exit(1);
 }
 
@@ -213,22 +225,31 @@ function filename(path) {
 
 function help() {
   console.log(`
-Usage: ${filename(process.argv[1])} <command> [--in $INFILE] [--out $OUTFILE] [--out-pdf $OUTPDF]
+Usage:
 
-Create a personal resume and publish it as a HTML page and PDF file.
+  ${filename(process.argv[1])} <command> [--in ${ul('input-html-file')}] [--out ${ul('root-build-directory')}] [--out-html ${ul('output-html-directory')}] [--out-pdf ${ul('output-pdf-file')}] [--public-url ${ul('url')}] [--verbose]
+
+Description:
+
+  Create a personal resume and publish it as a HTML page and PDF file.
 
 Commands:
 
-help        display this help and exit
-dev         start the development server
-build       generate an HTML and PDF file of the resume.
-test        run tests
-serve       start a web server to preview your files
+  help        display this help and exit
+  dev         start the development server
+  build       generate an HTML and PDF file of the resume.
+  test        run tests
+  serve       start a web server to preview your files
 
 Options:
 
---in        path to the resume HTML file. Defaults to "src/index.html"
---out       path to output the resume HTML file. Defaults to "dist/index.html"
---out-pdf   path to output the resume PDF file. Defaults to "dist/resume.pdf"
+  --in          path to the resume HTML file. Defaults to Connor's resume
+  --out         root build directory for the project. Defaults to "dist/"
+  --out-html    directory to output the built HTML file, relative to the root
+                build directory. Defaults to "."
+  --out-pdf     path to output the resume PDF file, relative to the root build
+                directory. Defaults to "resume.pdf"
+  --public-url  path where the resume's HTML assets will be hosted.
+  --verbose     enable debug logging
 `)
 }
