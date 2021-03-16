@@ -5,8 +5,17 @@ const http = require('http');
 const path = require('path');
 const serveStatic = require('serve-static');
 const finalhandler = require('finalhandler');
-const commands = ["help", "dev", "test", "serve", "build"];
+const puppeteer = require('puppeteer');
+const chokidar = require('chokidar');
+const { performance } = require('perf_hooks');
+const commands = ["help", "dev", "test", "serve", "build",];
+const log = console.log.bind(console);
 
+// TODO i think i need to get rid of bundling entirely, and turn my SASS file
+// into a CSS file. any variables can use the new css var feature.
+// How would HMR work then? I could write my websocket client/server that triggers
+// a refresh whenever a change occurs, or I could just set up webpack and have
+// that work. probably the good long term choice.
 run.apply(null, parseCliArguments());
 
 function parseCliArguments(argv = process.argv) {
@@ -76,7 +85,7 @@ function parseCliArguments(argv = process.argv) {
 
 async function run(command, options = {}) {
   const {
-    infile = 'src/index.html',
+    infile = path.join(__dirname, 'src/index.html'),
     outdir = 'dist',
     outfile = 'index.html',
     outpdf = 'resume.pdf',
@@ -88,33 +97,33 @@ async function run(command, options = {}) {
     console.log('node version %o', process.version);
     console.log('arguments: %o', { command, infile, outdir, outfile, outpdf, publicUrl, verbose });
   }
+
+  // TODO these if statements should be an object and the includes test will
+  // be a test for membership of the command in the commands object.
   if (command === 'help' || !commands.includes(command)) {
     help();
   }
   if (command === "dev") {
-    await Promise.all([
-      // TODO replace parcel with webpack, or use parcel's JS API
-      spawnWrapper('npx', ['parcel', infile]),
-      // TODO replace nodemon with chokidar
-      spawnWrapper('npx', [
-        'nodemon', '-w', path.join(outdir, outfile), '-x', 'time', 'node', 'pdf.js'
-      ]),
-    ]);
+    const watcher = chokidar.watch(outputFile);
+    watcher.on('change', () => pdf('http://localhost:1234', outputPdf));
+    // TODO replace parcel with webpack, or use parcel's JS API
+    await spawnWrapper('npx', ['parcel', infile]);
+    await watcher.close();
   }
   if (command === "test") {
     die('ERROR: no tests specified');
   }
   if (command === "build") {
-    const server = startStaticServer(path.join(__dirname, outdir));
+    const server = startStaticServer(outdir);
     server.on('listening', async () => {
       await spawnWrapper('npx', [
-        'parcel', 'build', path.join(__dirname, infile),
-        '--dist-dir', path.join('.', outdir),
-        '--cache-dir', path.join('.', '.parcel-cache'),
+        'parcel', 'build', infile,
+        '--dist-dir', path.join(outdir, path.dirname(outfile)),
+        '--cache-dir', path.join(__dirname, '.parcel-cache'),
         '--public-url', publicUrl,
         '--no-cache'
       ]);
-      await spawnWrapper('node', [path.join(__dirname, 'pdf.js')]);
+      await pdf(`http://localhost:${server.address().port}${publicUrl}`, path.join(outdir, outpdf));
       server.close();
     });
   }
@@ -126,8 +135,40 @@ async function run(command, options = {}) {
   }
 }
 
-function startStaticServer(dir, port = 1234) {
-  const serve = serveStatic(path.join('.', dir));
+class Timer {
+  constructor() {
+    this.milliseconds = null;
+    this.seconds = null;
+  }
+  start() {
+    this.milliseconds = performance.now();
+    this.seconds = (this.milliseconds / 1000).toFixed(3);
+  }
+  end() {
+    this.milliseconds = performance.now() - this.milliseconds;
+    this.seconds = (this.milliseconds / 1000).toFixed(3);
+  }
+  reset() {
+    this.milliseconds = null;
+    this.seconds = null;
+  }
+}
+
+async function pdf(fromUrl = 'http://localhost:1234', toFile = 'dist/resume.pdf') {
+  const timer = new Timer();
+  log('🖨️  creating pdf from %o', fromUrl);
+  timer.start();
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.goto(fromUrl, {waitUntil: 'networkidle2'});
+  await page.pdf({path: toFile, format: 'A4'});
+  await browser.close();
+  timer.end();
+  log('🖨️  %o created in %o', toFile, timer.seconds + 's');
+}
+
+function startStaticServer(dir, port = 0) {
+  const serve = serveStatic(dir);
   const server = http.createServer((req, res) => {
     serve(req, res, finalhandler(req, res));
   });
