@@ -12,35 +12,29 @@ const chalk = require('chalk');
 const log = console.log.bind(console);
 const ul = chalk.underline;
 
-// TODO i think i need to get rid of bundling entirely, and turn my SASS file
-// into a CSS file. any variables can use the new css var feature.
-// How would HMR work then? I could write my websocket client/server that triggers
-// a refresh whenever a change occurs, or I could just set up webpack and have
-// that work. probably the good long term choice.
-
 const commands = {
   help() {
     help();
   },
-  async dev({ outdir, outfile, outpdf,  }) {
-    const watcher = chokidar.watch(path.join(outdir, outfile));
+  async dev({ outdir, outhtml, outpdf,  }) {
+    const watcher = chokidar.watch(path.join(outdir, outhtml));
     watcher.on('change', () => pdf({
       fromUrl: 'http://localhost:1234',
       toFile: path.join(outdir, outpdf)
     }));
-    // TODO replace parcel with webpack, or use parcel's JS API
+    // TODO use parcel's JS API
     await spawnWrapper('npx', ['parcel', infile]);
     await watcher.close();
   },
   test() {
     die('ERROR: no tests specified');
   },
-  async build({ infile, outdir, outfile, outpdf, publicUrl }) {
+  async build({ infile, outdir, outhtml, outpdf, publicUrl }) {
     const server = startStaticServer(outdir);
     server.on('listening', async () => {
       await spawnWrapper('npx', [
         'parcel', 'build', infile,
-        '--dist-dir', path.join(outdir, path.dirname(outfile)),
+        '--dist-dir', path.join(outdir, outhtml),
         '--cache-dir', path.join(__dirname, '.parcel-cache'),
         '--public-url', publicUrl,
         '--no-cache'
@@ -95,7 +89,7 @@ function parseCliArguments(argv = process.argv) {
         break;
       case '--out-html':
         if (args[1]) {
-          options.outfile = args[1];
+          options.outhtml = args[1];
           args.shift();
         } else {
           dieWithHelp('ERROR: "--out-html" requires an non-empty argument.');
@@ -131,7 +125,7 @@ async function run(command, options = {}) {
   const {
     infile = path.join(__dirname, 'src/index.html'),
     outdir = 'dist',
-    outfile = '.',
+    outhtml = '.',
     outpdf = 'resume.pdf',
     publicUrl = '/',
     verbose = 0,
@@ -139,10 +133,10 @@ async function run(command, options = {}) {
 
   if (options.verbose > 0) {
     console.log('node version %o', process.version);
-    console.log('arguments: %o', { command, infile, outdir, outfile, outpdf, publicUrl, verbose });
+    console.log('arguments: %o', { command, infile, outdir, outhtml, outpdf, publicUrl, verbose });
   }
 
-  return commands[command]({ infile, outdir, outfile, outpdf, publicUrl, verbose });
+  return commands[command]({ infile, outdir, outhtml, outpdf, publicUrl, verbose });
 }
 
 class Timer {
@@ -197,7 +191,7 @@ function spawnWrapper(...args) {
     });
     proc.on('close', (code, signal) => {
       if (code === 0) { return resolve(); }
-      console.error('Closing %o', { args, code, signal });
+      console.error('Closing %o', args[0]);
       reject();
     });
     proc.on('exit', (code, signal) => {
