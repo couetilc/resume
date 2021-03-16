@@ -24,7 +24,10 @@ const commands = {
   },
   async dev({ outdir, outfile, outpdf,  }) {
     const watcher = chokidar.watch(path.join(outdir, outfile));
-    watcher.on('change', () => pdf('http://localhost:1234', path.join(outdir, outpdf)));
+    watcher.on('change', () => pdf({
+      fromUrl: 'http://localhost:1234',
+      toFile: path.join(outdir, outpdf)
+    }));
     // TODO replace parcel with webpack, or use parcel's JS API
     await spawnWrapper('npx', ['parcel', infile]);
     await watcher.close();
@@ -42,7 +45,10 @@ const commands = {
         '--public-url', publicUrl,
         '--no-cache'
       ]);
-      await pdf(`http://localhost:${server.address().port}${publicUrl}`, path.join(outdir, outpdf));
+      await pdf({
+        fromUrl: `http://localhost:${server.address().port}${publicUrl}`,
+        toFile: path.join(outdir, outpdf)
+      });
       server.close();
     });
   },
@@ -158,8 +164,7 @@ class Timer {
   }
 }
 
-// TODO turn arguments into object
-async function pdf(fromUrl = 'http://localhost:1234', toFile = 'dist/resume.pdf') {
+async function pdf({ fromUrl, toFile }) {
   const timer = new Timer();
   log('🖨️  creating pdf from %o', fromUrl);
   timer.start();
