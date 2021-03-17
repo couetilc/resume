@@ -9,7 +9,9 @@ const puppeteer = require('puppeteer');
 const chokidar = require('chokidar');
 const { performance } = require('perf_hooks');
 const chalk = require('chalk');
-const log = console.log.bind(console);
+const log = console.log.bind(console); // eslint-disable-line no-console
+const error = console.error.bind(console); // eslint-disable-line no-console
+const warn = console.warn.bind(console); // eslint-disable-line no-console
 const ul = chalk.underline;
 
 const commands = {
@@ -26,9 +28,10 @@ const commands = {
     await watcher.close();
   },
   test() {
-    die('ERROR: no tests specified');
+    spawnWrapper('npx', ['eslint', '.'])
+      .catch(() => die("ERROR: tests failed"));
   },
-  async build({ infile, outdir, outhtml, outpdf, publicUrl }) {
+  build({ infile, outdir, outhtml, outpdf, publicUrl }) {
     const server = startStaticServer(outdir);
     server.on('listening', async () => {
       await spawnWrapper('npx', [
@@ -48,7 +51,7 @@ const commands = {
   serve({ outdir }) {
     const server = startStaticServer(path.join(__dirname, outdir));
     server.on('listening', () => {
-      console.log('listening at %o', server.address());
+      log('listening at %o', server.address());
     });
   }
 }
@@ -111,7 +114,7 @@ function parseCliArguments(argv = process.argv) {
         }
         break;
       default:
-        console.error("WARN: Uknown option (ignored): %o\n", args[0]);
+        warn("WARN: Uknown option (ignored): %o\n", args[0]);
         break;
     }
   }
@@ -120,7 +123,7 @@ function parseCliArguments(argv = process.argv) {
 }
 
 
-async function run(command, options = {}) {
+function run(command, options = {}) {
   const {
     infile = path.join(__dirname, 'src/index.html'),
     outdir = 'dist',
@@ -131,8 +134,8 @@ async function run(command, options = {}) {
   } = options;
 
   if (options.verbose > 0) {
-    console.log('node version %o', process.version);
-    console.log('arguments: %o', { command, infile, outdir, outhtml, outpdf, publicUrl, verbose });
+    log('node version %o', process.version);
+    log('arguments: %o', { command, infile, outdir, outhtml, outpdf, publicUrl, verbose });
   }
 
   return commands[command]({ infile, outdir, outhtml, outpdf, publicUrl, verbose });
@@ -189,30 +192,33 @@ function spawnWrapper(...args) {
       process.stderr.write(data.toString());
     });
     proc.on('close', (code, signal) => {
-      if (code === 0) { return resolve(); }
-      console.error('Closing %o', args[0]);
-      reject();
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(signal);
+      }
     });
     proc.on('exit', (code, signal) => {
-      if (code === 0) { return resolve(); }
-      console.error('Exiting %o', { args, code, signal });
-      reject();
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(signal);
+      }
     });
     proc.on('error', (err) => {
-      console.error('Error %o', error);
-      reject();
+      error('Error %o', err);
+      reject(err);
     });
   });
 }
 
 function die(...messages) {
-  console.error(...messages);
-  help()
+  error(...messages);
   process.exit(1);
 }
 
 function dieWithHelp(...messages) {
-  console.error(...messages);
+  error(...messages);
   help()
   process.exit(1);
 }
@@ -222,7 +228,7 @@ function filename(path) {
 }
 
 function help() {
-  console.log(`
+  log(`
 Usage:
 
   ${filename(process.argv[1])} <command> [--in ${ul('input-html-file')}] [--out ${ul('root-build-directory')}] [--out-html ${ul('output-html-directory')}] [--out-pdf ${ul('output-pdf-file')}] [--public-url ${ul('url')}] [--verbose]
