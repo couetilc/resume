@@ -1,11 +1,11 @@
 {
-  "name": "resume",
+  "name": "cc-resume",
   "version": "1.0.0",
   "description": "",
   "html": "dist/index.html",
   "pdf": "dist/resume.pdf",
   "bin": {
-    "resume": "cli.js"
+    "cc-resume": "cli.js"
   },
   "scripts": {
     "dev": "./cli.js dev",
