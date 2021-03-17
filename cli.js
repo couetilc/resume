@@ -16,13 +16,12 @@ const commands = {
   help() {
     help();
   },
-  async dev({ outdir, outhtml, outpdf,  }) {
-    const watcher = chokidar.watch(path.join(outdir, outhtml));
+  async dev({ infile, outdir, outhtml, outpdf,  }) {
+    const watcher = chokidar.watch(path.join(outdir, outhtml, 'index.html'));
     watcher.on('change', () => pdf({
       fromUrl: 'http://localhost:1234',
       toFile: path.join(outdir, outpdf)
     }));
-    // TODO use parcel's JS API
     await spawnWrapper('npx', ['parcel', infile]);
     await watcher.close();
   },

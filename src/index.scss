@@ -1,8 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Playfair+Display');
-
 /* Global Variables */
 
-$bg-painting: url('./assets/bg_monet.jpg');
 $paper-width: 816px;
 $phone-width: 568px;
 
@@ -37,15 +34,14 @@ body {
     justify-content: center;
     margin: 0;
     @media print {
-      font-size: 14px;
       background-image: none;
+      font-size: 14px;
     }
     @media not print {
-      // for web,
-      // - add a background picture to the page
-      background-image: $bg-painting;
+      background-image: url('./assets/bg_monet_optimized.jpg');
+      background-image: url('./assets/bg_monet_optimized.webp');
       background-size: cover;
-      // - provide a space around the resume on large enough screen widths
+      // provide a space around the resume on large enough screen widths
       $paddingSize: .5in;
       $minBound: $paper-width;
       $maxBound: $minBound + 2 * $paddingSize;
@@ -56,7 +52,7 @@ body {
       @media (max-width: $minBound) {
         padding: 0;
       }
-      // - make the resume look like an actual 8.5x11 sheet of paper
+      // make the resume look like an actual 8.5x11 sheet of paper
       #resume {
         box-shadow: 3px 3px 4px 4px rgba(0,0,0,.6);
         max-width: $minBound;
@@ -113,11 +109,11 @@ a {
 .intro {
   @media (min-width: $phone-width) {
     display: grid;
-    grid-template-areas: "top top" "mid mid" "left right";
+    grid-template-areas: "left right" "mid mid" "bot bot";
     gap: $space-1 $space-3;
     > *:first-child {
       margin: $space-0;
-      grid-area: top;
+      grid-area: left;
       white-space: nowrap;
     }
     > *:nth-child(2) {
@@ -128,29 +124,10 @@ a {
       grid-area: mid;
     }
     > *:nth-child(4) {
-      grid-area: left;
-      text-align: center;
+      grid-area: bot;
     }
     .inline-list > *:nth-child(n+2)::before {
       padding: $space-0;
-    }
-  }
-  @media (min-width: $paper-width) {
-    display: grid;
-    grid-template-areas: "left right" "mid mid" "bot bot";
-    gap: $space-0; // $space-1 $space-3;
-    > *:first-child {
-      grid-area: left;
-      margin: $space-0;
-    }
-    > *:nth-child(2) {
-      grid-area: right;
-    }
-    > *:nth-child(3) {
-      grid-area: mid;
-    }
-    > *:nth-child(4) {
-      grid-area: bot;
     }
   }
 }
