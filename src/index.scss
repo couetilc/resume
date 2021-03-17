@@ -39,7 +39,8 @@ body {
     }
     @media not print {
       background-image: url('./assets/bg_monet_optimized.jpg');
-      background-image: url('./assets/bg_monet_optimized.webp');
+      /* webpackIgnore: false */
+      // background-image: url('./assets/bg_monet_optimized.webp');
       background-size: cover;
       // provide a space around the resume on large enough screen widths
       $paddingSize: .5in;
