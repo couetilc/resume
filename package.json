@@ -1,9 +1,10 @@
 {
   "name": "cc-resume",
   "version": "1.0.0",
-  "description": "",
+  "description": "Connor Couetil's résumé, built using open web technologies",
   "html": "dist/index.html",
   "pdf": "dist/resume.pdf",
+  "main": "api.js",
   "bin": {
     "cc-resume": "cli.js"
   },
