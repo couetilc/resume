@@ -18,6 +18,8 @@ let VERBOSE = false;
 const PORT = 61000;
 const HOST = 'localhost';
 
+// TODO get rid of outpdf everywhere, rename outdir to build-directory or something,
+// and outhtml will be the out folder like output-subdirectory or something.
 const commands = {
   dev({ infile, outdir, outhtml, outpdf,  }) {
     const config = getWebpackConfig({
@@ -28,7 +30,7 @@ const commands = {
     const fileWatcher = chokidar.watch(path.join(outdir, outhtml, 'index.html'));
     fileWatcher.on('change', () => pdf({
       fromUrl: `http://${config.devServer.host}:${config.devServer.port}`,
-      toFile: path.join(outdir, outpdf)
+      toFile: path.join(outdir, outhtml, 'resume.pdf')
     }));
     devServer.listen(config.devServer.port, config.devServer.host);
   },
@@ -50,7 +52,7 @@ const commands = {
         try {
           await pdf({
             fromUrl: `http://localhost:${server.address().port}${publicUrl}`,
-            toFile: path.join(outdir, outpdf)
+            toFile: path.join(outdir, outhtml, 'resume.pdf')
           });
         } catch (e) {
           error(e);
@@ -169,18 +171,20 @@ function handleWebpackCompileErrors(err, stats) {
     }
     return true;
   }
-  const info = stats.toJson();
+  const { errors, warnings, ...info } = stats.toJson();
   if (VERBOSE) log(info);
   if (stats.hasErrors()) {
-    error(info.errors);
+    error(errors);
+    return true;
   }
   if (stats.hasWarnings()) {
-    warn(info.warnings);
+    warn(warnings);
   }
   return false;
 }
 
 function getWebpackConfig({
+  // TODO change publicUrl to publicPath here and in CLI?
   mode = 'production', infile, outdir, outhtml, outpdf, publicUrl
 }) {
   // TODO what ot do with outpdf and publicUrl?
@@ -188,8 +192,9 @@ function getWebpackConfig({
     entry: path.join(path.dirname(infile), 'index.js'),
     mode,
     output: {
-      path: path.resolve(__dirname, outdir),
+      path: path.resolve(outdir, outhtml),
       filename: 'index.js',
+      publicPath: publicUrl,
     },
     module: {
       rules: [
@@ -213,7 +218,7 @@ function getWebpackConfig({
     plugins: [
       new MiniCssExtractPlugin(),
       new HtmlWebpackPlugin({
-        filename: /\.html$/iu.test(outhtml) ? outhtml : path.join(outhtml, 'index.html'), // TODO test?
+        filename: 'index.html', // /\.html$/iu.test(outhtml) ? outhtml : path.join(outhtml, 'index.html'), // TODO test?
         template: infile,
         inject: true,
       })
