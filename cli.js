@@ -110,13 +110,13 @@ Commands:
 
 Options:
 
-  --in             path to the resume HTML file used as a template by Webpack.
-                   Defaults to Connor's resume
-  --build          root build directory for the project. Defaults to "dist/"
-  --out            directory to output the built HTML file, relative to the root
-                   build directory. Defaults to "."
-  --public-url     url or path where the resume's HTML assets will be hosted.
-                   Defaults to "/"
-  -v,--verbose     enable debug logging
+  --in             Path to the resume HTML file used as a template by Webpack.
+                   Defaults to Connor's resume.
+  --build          Root build directory for the project. Defaults to "dist/"
+  --out            Directory to output the built HTML/CSS/JS/IMG/PDF files,
+                   relative to the root build directory. Defaults to ".".
+  --public-url     URL or path where the resume's HTML/CSS/JS/IMG/PDF assets
+                   will be hosted. Defaults to "/".
+  -v,--verbose     Enable debug logging.
 `)
 }
