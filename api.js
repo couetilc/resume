@@ -218,7 +218,7 @@ function getWebpackConfig({
     plugins: [
       new MiniCssExtractPlugin(),
       new HtmlWebpackPlugin({
-        filename: 'index.html', // /\.html$/iu.test(outhtml) ? outhtml : path.join(outhtml, 'index.html'), // TODO test?
+        filename: 'index.html',
         template: infile,
         inject: true,
       })
@@ -231,6 +231,7 @@ function getWebpackConfig({
       writeToDisk: file => /index.html/ui.test(file),
       useLocalIp: false,
       contentBase: outdir,
+      watchContentBase: false,
     }
   };
 }
