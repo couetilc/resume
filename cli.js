@@ -15,46 +15,46 @@ function parseCliArguments(argv = process.argv) {
   const command = args[0];
   const options = {};
 
-  if (command === 'help' || !run.COMMANDS.includes(command)) {
+  if (command === 'help') {
+    exitWithHelp();
+  }
+
+  if (!run.COMMANDS.includes(command)) {
     dieWithHelp("ERROR: unknown command %o", command);
   }
 
   for (args.shift(); args.length > 0; args.shift()) {
     switch (args[0]) {
+      case '-h':
+      case '--help':
+        exitWithHelp();
+        break;
       case '-v':
       case '--verbose':
         options.verbose = 1;
         break;
       case '--in':
         if (args[1]) {
-          options.infile = args[1];
+          options.inFile = args[1];
           args.shift();
         } else {
           dieWithHelp('ERROR: "--in" requires an non-empty argument.');
         }
         break;
+      case '--build':
+        if (args[1]) {
+          options.buildDir = args[1];
+          args.shift();
+        } else {
+          dieWithHelp('ERROR: "--build" requires an non-empty argument.');
+        }
+        break;
       case '--out':
         if (args[1]) {
-          options.outdir = args[1];
+          options.outDir = args[1];
           args.shift();
         } else {
           dieWithHelp('ERROR: "--out" requires an non-empty argument.');
-        }
-        break;
-      case '--out-html':
-        if (args[1]) {
-          options.outhtml = args[1];
-          args.shift();
-        } else {
-          dieWithHelp('ERROR: "--out-html" requires an non-empty argument.');
-        }
-        break;
-      case '--out-pdf':
-        if (args[1]) {
-          options.outpdf = args[1];
-          args.shift();
-        } else {
-          dieWithHelp('ERROR: "--out-pdf" requires an non-empty argument.');
         }
         break;
       case '--public-url':
@@ -74,8 +74,14 @@ function parseCliArguments(argv = process.argv) {
   return [command, options];
 }
 
+function exitWithHelp(...messages) {
+  if (messages.length) log(...messages);
+  help()
+  process.exit(0);
+}
+
 function dieWithHelp(...messages) {
-  error(...messages);
+  if (messages.length) error(...messages);
   help()
   process.exit(1);
 }
@@ -88,7 +94,7 @@ function help() {
   log(`
 Usage:
 
-  ${filename(process.argv[1])} <command> [--in ${ul('input-html-file')}] [--out ${ul('root-build-directory')}] [--out-html ${ul('output-html-directory')}] [--out-pdf ${ul('output-pdf-file')}] [--public-url ${ul('url')}] [--verbose]
+  ${filename(process.argv[1])} <command> [--in ${ul('input-html-file')}] [--build ${ul('root-build-directory')}] [--out ${ul('output-html-directory')}] [--public-url ${ul('url-or-path')}] [-v|--verbose]
 
 Description:
 
@@ -104,13 +110,13 @@ Commands:
 
 Options:
 
-  --in          path to the resume HTML file. Defaults to Connor's resume
-  --out         root build directory for the project. Defaults to "dist/"
-  --out-html    directory to output the built HTML file, relative to the root
-                build directory. Defaults to "."
-  --out-pdf     path to output the resume PDF file, relative to the root build
-                directory. Defaults to "resume.pdf"
-  --public-url  path where the resume's HTML assets will be hosted.
-  --verbose     enable debug logging
+  --in             path to the resume HTML file used as a template by Webpack.
+                   Defaults to Connor's resume
+  --build          root build directory for the project. Defaults to "dist/"
+  --out            directory to output the built HTML file, relative to the root
+                   build directory. Defaults to "."
+  --public-url     url or path where the resume's HTML assets will be hosted.
+                   Defaults to "/"
+  -v,--verbose     enable debug logging
 `)
 }

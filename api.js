@@ -1,4 +1,3 @@
-const { spawn } = require('child_process');
 const http = require('http');
 const path = require('path');
 const serveStatic = require('serve-static');
@@ -10,6 +9,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackDevServer = require('webpack-dev-server');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { ESLint } = require('eslint');
 
 const log = console.log.bind(console); // eslint-disable-line no-console
 const error = console.error.bind(console); // eslint-disable-line no-console
@@ -18,41 +18,47 @@ let VERBOSE = false;
 const PORT = 61000;
 const HOST = 'localhost';
 
-// TODO get rid of outpdf everywhere, rename outdir to build-directory or something,
-// and outhtml will be the out folder like output-subdirectory or something.
 const commands = {
-  dev({ infile, outdir, outhtml, outpdf,  }) {
+  dev({ inFile, buildDir, outDir, }) {
     const config = getWebpackConfig({
-      mode: 'development', infile, outdir, outhtml, outpdf,
+      mode: 'development', inFile, buildDir, outDir,
     });
     const compiler = webpack(config);
     const devServer = new WebpackDevServer(compiler, config.devServer);
-    const fileWatcher = chokidar.watch(path.join(outdir, outhtml, 'index.html'));
+    const fileWatcher = chokidar.watch(path.join(buildDir, outDir, 'index.html'));
     fileWatcher.on('change', () => pdf({
       fromUrl: `http://${config.devServer.host}:${config.devServer.port}`,
-      toFile: path.join(outdir, outhtml, 'resume.pdf')
+      toFile: path.join(buildDir, outDir, 'resume.pdf')
     }));
     devServer.listen(config.devServer.port, config.devServer.host);
   },
-  test() {
-    // TODO this doesn't exit with a non-zero code when the eslint fails, at least in GitHub actions
-    spawnWrapper('npx', ['eslint', '.'])
-      .catch(() => {
-        throw new Error("ERROR: tests failed")
-      });
+  async test() {
+    try {
+      const eslint = new ESLint();
+      const results = await eslint.lintFiles('.');
+      const formatter = await eslint.loadFormatter("stylish");
+      const resultText = formatter.format(results);
+      log(resultText);
+      if (ESLint.getErrorResults(results).length > 0) {
+        throw new Error("Failed lint test");
+      }
+    } catch (e) {
+      error(e);
+      process.exit(1);
+    }
   },
-  build({ infile, outdir, outhtml, outpdf, publicUrl }) {
+  build({ inFile, buildDir, outDir, publicUrl }) {
     const compiler = webpack(
-      getWebpackConfig({ infile, outdir, outhtml, outpdf, publicUrl })
+      getWebpackConfig({ inFile, buildDir, outDir, publicUrl })
     );
     compiler.run((err, stats) => {
       if (handleWebpackCompileErrors(err, stats)) return;
-      const server = startStaticServer(outdir);
+      const server = startStaticServer(buildDir);
       server.on('listening', async () => {
         try {
           await pdf({
             fromUrl: `http://localhost:${server.address().port}${publicUrl}`,
-            toFile: path.join(outdir, outhtml, 'resume.pdf')
+            toFile: path.join(buildDir, outDir, 'resume.pdf')
           });
         } catch (e) {
           error(e);
@@ -62,8 +68,8 @@ const commands = {
       });
     });
   },
-  serve({ outdir }) {
-    const server = startStaticServer(path.join(__dirname, outdir), PORT, HOST);
+  serve({ buildDir }) {
+    const server = startStaticServer(path.join(__dirname, buildDir), PORT, HOST);
     server.on('listening', () => {
       log('listening at %o', server.address());
     });
@@ -72,10 +78,9 @@ const commands = {
 
 function run(command, options = {}) {
   const {
-    infile = path.join(__dirname, 'src/index.html'),
-    outdir = 'dist',
-    outhtml = '.',
-    outpdf = 'resume.pdf',
+    inFile = path.join(__dirname, 'src/index.html'),
+    buildDir = 'dist',
+    outDir = '.',
     publicUrl = '/',
     verbose = 0,
   } = options;
@@ -84,10 +89,10 @@ function run(command, options = {}) {
 
   if (VERBOSE) {
     log('node version %o', process.version);
-    log('arguments: %o', { command, infile, outdir, outhtml, outpdf, publicUrl, verbose });
+    log('arguments: %o', { command, inFile, buildDir, outDir, publicUrl, verbose });
   }
 
-  return commands[command]({ infile, outdir, outhtml, outpdf, publicUrl, verbose });
+  return commands[command]({ inFile, buildDir, outDir, publicUrl, verbose });
 }
 
 class Timer {
@@ -122,45 +127,13 @@ async function pdf({ fromUrl, toFile }) {
   log('🖨️  %o created in %o', toFile, timer.seconds + 's');
 }
 
-function startStaticServer(dir, port = PORT, host = HOST) {
+function startStaticServer(dir, port, host) {
   const serve = serveStatic(dir);
   const server = http.createServer((req, res) => {
     serve(req, res, finalhandler(req, res));
   });
   server.listen(port, host);
   return server;
-}
-
-function spawnWrapper(...args) {
-  return new Promise((resolve, reject) => {
-    const proc = spawn(...args);
-    proc.stdout.on('data', data => {
-      process.stdout.write(data.toString());
-    });
-    proc.stderr.on('data', data => {
-      process.stderr.write(data.toString());
-    });
-    proc.on('close', (code, signal) => {
-      if (code === 0) {
-        if (VERBOSE) error({ code, signal, args });
-        resolve();
-      } else {
-        reject(signal);
-      }
-    });
-    proc.on('exit', (code, signal) => {
-      if (code === 0) {
-        if (VERBOSE) error({ code, signal, args });
-        resolve();
-      } else {
-        reject(signal);
-      }
-    });
-    proc.on('error', (err) => {
-      error('Error %o', err);
-      reject(err);
-    });
-  });
 }
 
 function handleWebpackCompileErrors(err, stats) {
@@ -184,15 +157,13 @@ function handleWebpackCompileErrors(err, stats) {
 }
 
 function getWebpackConfig({
-  // TODO change publicUrl to publicPath here and in CLI?
-  mode = 'production', infile, outdir, outhtml, outpdf, publicUrl
+  mode = 'production', inFile, buildDir, outDir, publicUrl
 }) {
-  // TODO what ot do with outpdf and publicUrl?
   return {
-    entry: path.join(path.dirname(infile), 'index.js'),
+    entry: path.join(path.dirname(inFile), 'index.js'),
     mode,
     output: {
-      path: path.resolve(outdir, outhtml),
+      path: path.resolve(buildDir, outDir),
       filename: 'index.js',
       publicPath: publicUrl,
     },
@@ -219,7 +190,7 @@ function getWebpackConfig({
       new MiniCssExtractPlugin(),
       new HtmlWebpackPlugin({
         filename: 'index.html',
-        template: infile,
+        template: inFile,
         inject: true,
       })
     ],
@@ -230,7 +201,7 @@ function getWebpackConfig({
       port: PORT,
       writeToDisk: file => /index.html/ui.test(file),
       useLocalIp: false,
-      contentBase: outdir,
+      contentBase: buildDir,
       watchContentBase: false,
     }
   };
