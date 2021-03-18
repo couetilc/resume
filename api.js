@@ -33,6 +33,7 @@ const commands = {
     devServer.listen(config.devServer.port, config.devServer.host);
   },
   test() {
+    // TODO this doesn't exit with a non-zero code when the eslint fails, at least in GitHub actions
     spawnWrapper('npx', ['eslint', '.'])
       .catch(() => {
         throw new Error("ERROR: tests failed")
