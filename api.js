@@ -169,6 +169,7 @@ function handleWebpackCompileErrors(err, stats) {
     return true;
   }
   const info = stats.toJson();
+  if (VERBOSE) log(info);
   if (stats.hasErrors()) {
     error(info.errors);
   }
