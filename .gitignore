@@ -1,6 +1,4 @@
-# parcel bundler
-.parcel-cache
-.cache
+# build folder
 dist
 
 # Vim usage files
