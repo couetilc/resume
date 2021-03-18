@@ -15,6 +15,8 @@ const log = console.log.bind(console); // eslint-disable-line no-console
 const error = console.error.bind(console); // eslint-disable-line no-console
 const warn = console.warn.bind(console); // eslint-disable-line no-console
 let VERBOSE = false;
+const PORT = 61000;
+const HOST = 'localhost';
 
 const commands = {
   dev({ infile, outdir, outhtml, outpdf,  }) {
@@ -40,22 +42,25 @@ const commands = {
     const compiler = webpack(
       getWebpackConfig({ infile, outdir, outhtml, outpdf, publicUrl })
     );
-    compiler.run(handleWebpackCompileErrors)
-    const server = startStaticServer(outdir);
-    server.on('listening', async () => {
-      try {
-        await pdf({
-          fromUrl: `http://localhost:${server.address().port}${publicUrl}`,
-          toFile: path.join(outdir, outpdf)
-        });
-      } catch (e) {
-        error(e);
-      }
-      server.close();
+    compiler.run((err, stats) => {
+      if (handleWebpackCompileErrors(err, stats)) return;
+      const server = startStaticServer(outdir);
+      server.on('listening', async () => {
+        try {
+          await pdf({
+            fromUrl: `http://localhost:${server.address().port}${publicUrl}`,
+            toFile: path.join(outdir, outpdf)
+          });
+        } catch (e) {
+          error(e);
+        } finally {
+          server.close();
+        }
+      });
     });
   },
   serve({ outdir }) {
-    const server = startStaticServer(path.join(__dirname, outdir));
+    const server = startStaticServer(path.join(__dirname, outdir), PORT, HOST);
     server.on('listening', () => {
       log('listening at %o', server.address());
     });
@@ -114,12 +119,12 @@ async function pdf({ fromUrl, toFile }) {
   log('🖨️  %o created in %o', toFile, timer.seconds + 's');
 }
 
-function startStaticServer(dir, port = 0) {
+function startStaticServer(dir, port = PORT, host = HOST) {
   const serve = serveStatic(dir);
   const server = http.createServer((req, res) => {
     serve(req, res, finalhandler(req, res));
   });
-  server.listen(port);
+  server.listen(port, host);
   return server;
 }
 
@@ -161,7 +166,7 @@ function handleWebpackCompileErrors(err, stats) {
     if (err.details) {
       error(err.details);
     }
-    return;
+    return true;
   }
   const info = stats.toJson();
   if (stats.hasErrors()) {
@@ -170,6 +175,7 @@ function handleWebpackCompileErrors(err, stats) {
   if (stats.hasWarnings()) {
     warn(info.warnings);
   }
+  return false;
 }
 
 function getWebpackConfig({
@@ -206,19 +212,21 @@ function getWebpackConfig({
       new MiniCssExtractPlugin(),
       new HtmlWebpackPlugin({
         filename: /\.html$/iu.test(outhtml) ? outhtml : path.join(outhtml, 'index.html'), // TODO test?
-        template: infile, // .replace('.html', '.ejs')
+        template: infile,
         inject: true,
       })
     ],
     stats: 'verbose',
     devServer: {
       open: true,
-      host: 'localhost',
-      port: 61000,
+      host: HOST,
+      port: PORT,
       writeToDisk: file => /index.html/ui.test(file),
       useLocalIp: false,
+      contentBase: outdir,
     }
   };
 }
+
 run.COMMANDS = Object.keys(commands);
 module.exports = run;
