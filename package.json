@@ -47,7 +47,11 @@
     "eslint-plugin-node": "^11.1.0"
   },
   "eslintConfig": {
-    "extends": ["cc-lint"]
+    "extends": [
+      "cc-lint"
+    ]
   },
-  "eslintIgnore": ["dist"]
+  "eslintIgnore": [
+    "dist"
+  ]
 }
