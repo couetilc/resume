@@ -203,6 +203,9 @@ function getWebpackConfig({
       useLocalIp: false,
       contentBase: buildDir,
       watchContentBase: false,
+    },
+    optimization: {
+      minimize: false,
     }
   };
 }

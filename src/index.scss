@@ -127,9 +127,6 @@ a {
     > *:nth-child(4) {
       grid-area: bot;
     }
-    .inline-list > *:nth-child(n+2)::before {
-      padding: $space-0;
-    }
   }
 }
 
@@ -159,13 +156,15 @@ a {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-around;
-  > * {
-    text-align: center;
-    width: max-content;
+  > div {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
   }
 }
 
 .inline-list {
+  display: flex;
   > *:nth-child(n+2)::before {
     content: "○";
     padding: $space-0 $space-1;
