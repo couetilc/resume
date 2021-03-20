@@ -28,7 +28,7 @@ resume('build', { inFile, buildDir, outDir, publicUrl, verbose });
 ```
 Usage:
 
-  cli.js <command> [--in input-html-file] [--build root-build-directory] [--out output-html-directory] [--public-url url-or-path] [-v|--verbose]
+  cc-resume <command> [--in input-html-file] [--build root-build-directory] [--out output-html-directory] [--public-url url-or-path] [-v|--verbose]
 
 Description:
 
