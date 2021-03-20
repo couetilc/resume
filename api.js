@@ -178,14 +178,14 @@ function getWebpackConfig({
           ]
         },
         {
-          test: /\.(png|jpe?g|gif|webp|svg)$/ui, // eslint-disable-line prefer-named-capture-group
+          test: /\.(png|jpe?g|gif|webp|svg)$/ui,
           use: [
             'file-loader',
             'image-webpack-loader'
           ],
         },
         {
-          test: /\.(woff|woff2|eot|ttf|otf)$/ui, // eslint-disable-line prefer-named-capture-group
+          test: /\.(woff|woff2|eot|ttf|otf)$/ui,
           type: 'asset/resource',
         },
       ]
