@@ -1,6 +1,6 @@
 {
   "name": "cc-resume",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Connor Couetil's résumé, built using open web technologies",
   "html": "dist/index.html",
   "pdf": "dist/resume.pdf",
