@@ -184,6 +184,10 @@ function getWebpackConfig({
             'image-webpack-loader'
           ],
         },
+        {
+          test: /\.(woff|woff2|eot|ttf|otf)$/ui, // eslint-disable-line prefer-named-capture-group
+          type: 'asset/resource',
+        },
       ]
     },
     plugins: [

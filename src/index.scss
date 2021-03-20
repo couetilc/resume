@@ -1,3 +1,16 @@
+/* Font Families */
+
+@font-face {
+    font-family: 'subset Playfair Display';
+    src: local('Playfair Display Regular'), local('PlayfairDisplay-Regular'),
+        url('fonts/subset-PlayfairDisplay-Regular.woff2') format('woff2'),
+        url('fonts/subset-PlayfairDisplay-Regular.woff') format('woff'),
+        url('fonts/subset-PlayfairDisplay-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
 /* Global Variables */
 
 $paper-width: 816px;
@@ -63,7 +76,7 @@ body {
 }
 
 h1 {
-  font-family: 'Playfair Display', Times, serif;
+  font-family: 'subset Playfair Display', Times, serif;
   font-size: $size-xl;
 }
 h2 {
