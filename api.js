@@ -16,7 +16,7 @@ const error = console.error.bind(console); // eslint-disable-line no-console
 const warn = console.warn.bind(console); // eslint-disable-line no-console
 let VERBOSE = false;
 const PORT = 61000;
-const HOST = 'localhost';
+const HOST = '0.0.0.0';
 
 const commands = {
   dev({ inFile, buildDir, outDir, }) {
