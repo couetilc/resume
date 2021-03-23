@@ -44,7 +44,7 @@ const commands = {
       }
     } catch (e) {
       error(e);
-      process.exit(1);
+      process.exitCode = 1;
     }
   },
   build({ inFile, buildDir, outDir, publicUrl }) {
@@ -52,7 +52,10 @@ const commands = {
       getWebpackConfig({ inFile, buildDir, outDir, publicUrl })
     );
     compiler.run((err, stats) => {
-      if (handleWebpackCompileErrors(err, stats)) return;
+      if (handleWebpackCompileErrors(err, stats)) {
+        process.exitCode = 1;
+        return;
+      }
       const server = startStaticServer(buildDir);
       server.on('listening', async () => {
         try {
@@ -62,6 +65,7 @@ const commands = {
           });
         } catch (e) {
           error(e);
+          process.exitCode = 1;
         } finally {
           server.close();
         }
@@ -118,11 +122,17 @@ async function pdf({ fromUrl, toFile }) {
   const timer = new Timer();
   log('🖨️  creating pdf from %o', fromUrl);
   timer.start();
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto(fromUrl, {waitUntil: 'networkidle2'});
-  await page.pdf({path: toFile, format: 'A4'});
-  await browser.close();
+  let browser;
+  try {
+    browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(fromUrl, {waitUntil: 'networkidle2'});
+    await page.pdf({path: toFile, format: 'A4'});
+    await browser.close();
+  } catch (carried) {
+    await browser.close();
+    throw carried;
+  }
   timer.end();
   log('🖨️  %o created in %o', toFile, timer.seconds + 's');
 }
