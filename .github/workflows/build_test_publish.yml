@@ -46,6 +46,7 @@ jobs:
     if: github.event_name == 'release' && github.event.action == 'published'
     needs: build
     runs-on: ubuntu-latest
+    steps:
       - name: Publish Package
         run: npm publish
         env:
