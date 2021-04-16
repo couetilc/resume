@@ -1,0 +1,43 @@
+name: Build, Test, Publish
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Read .nvmrc
+        run: echo ::set-output name=NVMRC::$(cat .nvmrc)
+        id: nvm
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ steps.nvm.outputs.NVMRC }}
+          registry-url: https://registry.npmjs.org
+
+      - name: Install Dependencies
+        uses: bahmutov/npm-install@v1
+
+      - name: Run Tests
+        run: npm test
+
+      - name: Test Build
+        run: npm run build
+
+      - name: Publish Package
+        if: github.event_name == 'release'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
