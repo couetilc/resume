@@ -52,9 +52,9 @@ body {
     }
     @media not print {
       background-image: url('./assets/bg_monet_optimized.jpg');
-      /* webpackIgnore: false */
-      // background-image: url('./assets/bg_monet_optimized.webp');
       background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
       // provide a space around the resume on large enough screen widths
       $paddingSize: .5in;
       $minBound: $paper-width;
@@ -83,11 +83,11 @@ h1 {
 h2 {
   font-family: Helvetica, serif;
   font-size: $size-l;
-  margin: $space-3 $space-0;
+  margin: $space-1 $space-0;
 }
 h3 {
   font-size: $size-m;
-  margin: $space-2 $space-0;
+  margin: $space-2 $space-0 $space-1 $space-0;
   font-weight: normal;
 }
 h4 {
@@ -153,6 +153,10 @@ a {
       padding: $space-0 $space-3;
     }
   }
+}
+
+.experience {
+  margin: $space-3 $space-0 $space-4 $space-0;
 }
 
 .organization {
