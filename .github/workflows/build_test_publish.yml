@@ -28,7 +28,7 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Install Dependencies
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.7
 
       - name: Run Tests
         run: npm test
@@ -36,8 +36,17 @@ jobs:
       - name: Test Build
         run: npm run build
 
+      - name: Cache Build
+        uses: actions/cache@v2
+        with:
+          path: ./*
+          key: ${{ github.sha }}
+
+  publish:
+    if: github.event_name == 'release' && github.event.action == 'published'
+    needs: build
+    runs-on: ubuntu-latest
       - name: Publish Package
-        if: github.event_name == 'release' && github.event.action == 'published'
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
