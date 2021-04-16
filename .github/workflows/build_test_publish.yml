@@ -47,6 +47,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Restore Build
+        uses: actions/cache@v2
+        with:
+          path: ./*
+          key: ${{ github.sha }}
       - name: Publish Package
         run: npm publish
         env:
