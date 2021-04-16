@@ -28,7 +28,7 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Install Dependencies
-        uses: bahmutov/npm-install@v1.7
+        uses: bahmutov/npm-install@v1.7.4
 
       - name: Run Tests
         run: npm test
