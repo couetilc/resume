@@ -35,7 +35,7 @@ jobs:
       - name: Upload Resume Artificat
         uses: actions/upload-artifact@v2
         with:
-          name: Résumé
+          name: Resume.pdf
           path: dist/resume.pdf
 
   publish:
@@ -66,5 +66,5 @@ jobs:
       - name: Upload Resume Artificat
         uses: actions/upload-artifact@v2
         with:
-          name: Résumé
+          name: Resume.pdf
           path: dist/resume.pdf
