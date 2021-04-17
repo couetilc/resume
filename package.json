@@ -28,9 +28,6 @@
     "chalk": "^4.1.0",
     "chokidar": "^3.5.1",
     "css-loader": "^5.1.3",
-    "eslint": "^7.22.0",
-    "eslint-config-cc-lint": "^1.4.0",
-    "eslint-plugin-node": "^11.1.0",
     "file-loader": "^6.2.0",
     "finalhandler": "^1.1.2",
     "html-webpack-plugin": "^5.3.1",
@@ -44,12 +41,10 @@
     "webpack": "^5.26.3",
     "webpack-dev-server": "^3.11.2"
   },
-  "eslintConfig": {
-    "extends": [
-      "cc-lint"
-    ]
-  },
   "eslintIgnore": [
     "dist"
-  ]
+  ],
+  "devDependencies": {
+    "cc-lint": "^0.1.0"
+  }
 }

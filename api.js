@@ -9,7 +9,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackDevServer = require('webpack-dev-server');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { ESLint } = require('eslint');
+const { spawn } = require('child_process');
 
 const log = console.log.bind(console); // eslint-disable-line no-console
 const error = console.error.bind(console); // eslint-disable-line no-console
@@ -32,20 +32,10 @@ const commands = {
     }));
     devServer.listen(config.devServer.port, config.devServer.host);
   },
-  async test() {
-    try {
-      const eslint = new ESLint();
-      const results = await eslint.lintFiles('.');
-      const formatter = await eslint.loadFormatter("stylish");
-      const resultText = formatter.format(results);
-      log(resultText);
-      if (ESLint.getErrorResults(results).length > 0) {
-        throw new Error("Failed lint test");
-      }
-    } catch (e) {
-      error(e);
-      process.exitCode = 1;
-    }
+  test() {
+    const proc = spawn('npx', ['cc-lint', '.'], { stdio: ['inherit', 'inherit', 'inherit'] });
+    proc.on('close', code => process.exit(code));
+    proc.on('error', err => err && console.error(err)); // eslint-disable-line no-console
   },
   build({ inFile, buildDir, outDir, publicUrl }) {
     const compiler = webpack(
