@@ -45,6 +45,6 @@
     "dist"
   ],
   "devDependencies": {
-    "cc-lint": "^0.1.0"
+    "cc-lint": "^0.2.0"
   }
 }
