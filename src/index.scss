@@ -124,7 +124,12 @@ a {
 .intro {
   @media (min-width: $phone-width) {
     display: grid;
-    grid-template-areas: "left right" "mid mid" "bot bot";
+    grid-template:
+      "left right" auto
+      "mid mid" auto
+      "bot bot" auto
+      / 1fr min-content
+    ;
     gap: $space-1 $space-3;
     > *:first-child {
       margin: $space-0;
@@ -159,6 +164,13 @@ a {
   margin: $space-3 $space-0 $space-4 $space-0;
 }
 
+.experience-one-line {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .organization {
   > *:nth-child(2)::before,
   > *:nth-child(2)::after {
@@ -167,6 +179,10 @@ a {
   }
   > *:last-child {
     float: right;
+  }
+
+  .role {
+    font-weight: 600;
   }
 }
 
