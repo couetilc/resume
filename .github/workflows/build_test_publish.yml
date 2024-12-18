@@ -33,7 +33,7 @@ jobs:
         run: npm run build
 
       - name: Upload Resume Artificat
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Resume.pdf
           path: dist/resume.pdf
@@ -64,7 +64,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Upload Resume Artificat
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Resume.pdf
           path: dist/resume.pdf
