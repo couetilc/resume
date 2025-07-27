@@ -155,7 +155,13 @@ a:has(svg) {
 }
 
 .experience-one-line {
-  h2 { display: inline; }
+  h2 { display: inline; margin: 0; }
+  display: flex;
+  flex-flow: row;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1em;
+  span:nth-child(2) { flex: 1fr 0 auto; }
 }
 
 .organization {
