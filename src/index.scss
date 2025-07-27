@@ -39,6 +39,9 @@ $space-7: 2em;
 @page {
   margin: 0;
 }
+      a {
+        text-decoration: none;
+      }
 
 body {
     font-family: 'Helvetica', Arial, sans-serif;
@@ -122,10 +125,6 @@ a {
 /* component classes */
 
 .icon-linkedin, .icon-pdf { transform: translateY(.125em); }
-a:has(svg) {
-  text-decoration: none;
-  span { text-decoration: underline; }
-}
 
 .banner {
   display: flex;
