@@ -135,8 +135,8 @@ a:has(svg) {
 }
 
 .intro {
-  margin-bottom: 1em;
-  margin-top: -.125em;
+  margin-bottom: .5em;
+  margin-top: 0em;
 }
 
 .return-address {
@@ -151,7 +151,7 @@ a:has(svg) {
 }
 
 .experience {
-  margin: $space-3 $space-0 $space-4 $space-0;
+  margin: $space-3 $space-0 .5em $space-0;
 }
 
 .experience-one-line {
