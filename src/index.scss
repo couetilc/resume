@@ -121,32 +121,22 @@ a {
 
 /* component classes */
 
+.icon-linkedin, .icon-pdf { transform: translateY(.125em); }
+a:has(svg) {
+  text-decoration: none;
+  span { text-decoration: underline; }
+}
+
+.banner {
+  display: flex;
+  h1 { flex: 0 0 auto; }
+  * { flex: 1 0 auto; }
+  h1 { margin: 0; }
+}
+
 .intro {
-  @media (min-width: $phone-width) {
-    display: grid;
-    grid-template:
-      "left right" auto
-      "mid mid" auto
-      "bot bot" auto
-      / 1fr min-content
-    ;
-    gap: $space-1 $space-3;
-    > *:first-child {
-      margin: $space-0;
-      grid-area: left;
-      white-space: nowrap;
-    }
-    > *:nth-child(2) {
-      grid-area: right;
-    }
-    > *:nth-child(3) {
-      // TODO i don't want "resume built by..." to break line, shoud all be on one line
-      grid-area: mid;
-    }
-    > *:nth-child(4) {
-      grid-area: bot;
-    }
-  }
+  margin-bottom: 1em;
+  margin-top: -.125em;
 }
 
 .return-address {
@@ -165,10 +155,7 @@ a {
 }
 
 .experience-one-line {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: space-between;
+  h2 { display: inline; }
 }
 
 .organization {
