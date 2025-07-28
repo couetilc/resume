@@ -82,6 +82,7 @@ h1 {
   font-family: 'subset Playfair Display', Times, serif;
   font-weight: normal;
   font-size: $size-xl;
+  a { color: inherit; }
 }
 h2 {
   font-family: Helvetica, serif;
@@ -124,7 +125,10 @@ a {
 
 /* component classes */
 
-.icon-linkedin, .icon-pdf { transform: translateY(.125em); }
+.icon-linkedin, .icon-pdf, .icon-site { transform: translateY(.125em); }
+
+@media print { .link-pdf { display: none; }}
+@media not print { .link-site { display: none; }}
 
 .banner {
   display: flex;
