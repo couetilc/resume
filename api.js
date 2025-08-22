@@ -114,7 +114,10 @@ async function pdf({ fromUrl, toFile }) {
   timer.start();
   let browser;
   try {
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({
+      args: ['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage'],
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+    });
     const page = await browser.newPage();
     await page.goto(fromUrl, {waitUntil: 'networkidle2'});
     await page.pdf({path: toFile, format: 'A4'});
@@ -181,7 +184,12 @@ function getWebpackConfig({
           test: /\.(png|jpe?g|gif|webp|svg)$/ui,
           use: [
             'file-loader',
-            'image-webpack-loader'
+            {
+              loader: 'image-webpack-loader',
+              options: {
+                disable: true,
+	      }
+            }
           ],
         },
         {
