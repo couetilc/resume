@@ -35,15 +35,3 @@ RUN npm ci
 
 COPY . .
 RUN npm run build
-
-# ---------- 2) Runtime: tiny Nginx serving the built dist/ ----------
-FROM nginx:alpine AS runtime
-
-# Replace default site with our static site config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy only the built assets
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]

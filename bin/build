@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-docker build -t resume $root
+docker build -t resume:latest -f $root/Dockerfile $root
+docker build -t resume:dev -f $root/Dockerfile -f $root/Dockerfile.dev $root

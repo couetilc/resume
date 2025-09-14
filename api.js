@@ -46,7 +46,7 @@ const commands = {
         process.exitCode = 1;
         return;
       }
-      const server = startStaticServer(buildDir);
+      const server = startStaticServer(buildDir, undefined, undefined, publicUrl);
       server.on('listening', async () => {
         try {
           await pdf({
@@ -130,9 +130,13 @@ async function pdf({ fromUrl, toFile }) {
   log('🖨️  %o created in %o', toFile, timer.seconds + 's');
 }
 
-function startStaticServer(dir, port, host) {
+function startStaticServer(dir, port, host, publicUrl) {
   const serve = serveStatic(dir);
   const server = http.createServer((req, res) => {
+    let u = new URL(req.url, "http://localhost")
+    if (publicUrl && u.pathname.startsWith(publicUrl))
+      u.pathname = u.pathname.slice(publicUrl.length)
+    req.url = u.toString()
     serve(req, res, finalhandler(req, res));
   });
   server.listen(port, host);
@@ -203,6 +207,9 @@ function getWebpackConfig({
       new HtmlWebpackPlugin({
         filename: 'index.html',
         template: inFile,
+        templateParameters: {
+          publicUrl,
+        },
         inject: true,
       })
     ],
