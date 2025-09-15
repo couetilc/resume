@@ -120,7 +120,7 @@ async function pdf({ fromUrl, toFile }) {
     });
     const page = await browser.newPage();
     await page.goto(fromUrl, {waitUntil: 'networkidle2'});
-    await page.pdf({path: toFile, format: 'A4'});
+    await page.pdf({path: toFile, format: 'Letter'});
     await browser.close();
   } catch (carried) {
     await browser.close();
