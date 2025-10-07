@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
-docker build -t resume:latest -f $root/Dockerfile $root
-docker build -t resume:dev -f $root/Dockerfile -f $root/Dockerfile.dev $root
+docker build --target builder -t resume:latest -f $root/Dockerfile $root
+docker build --target dev -t resume:dev -f $root/Dockerfile $root
+docker build --target runtime -t resume:runtime -f $root/Dockerfile $root

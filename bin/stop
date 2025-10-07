@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker ps -q --filter "ancestor=resume:dev" --filter "ancestor=resume:runtime" | xargs -r docker stop
