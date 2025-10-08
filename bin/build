@@ -1,4 +1,29 @@
 #!/usr/bin/env bash
-docker build --target builder -t resume:latest -f $root/Dockerfile $root
-docker build --target dev -t resume:dev -f $root/Dockerfile $root
-docker build --target runtime -t resume:runtime -f $root/Dockerfile $root
+export DOCKER_BUILDKIT=1
+
+# Build all targets in parallel, sharing cache
+docker build \
+  --target builder \
+  --cache-from resume:latest \
+  --cache-from resume:dev \
+  --cache-from resume:runtime \
+  -t resume:latest \
+  -f $root/Dockerfile $root &
+
+docker build \
+  --target dev \
+  --cache-from resume:latest \
+  --cache-from resume:dev \
+  --cache-from resume:runtime \
+  -t resume:dev \
+  -f $root/Dockerfile $root &
+
+docker build \
+  --target runtime \
+  --cache-from resume:latest \
+  --cache-from resume:dev \
+  --cache-from resume:runtime \
+  -t resume:runtime \
+  -f $root/Dockerfile $root &
+
+wait
