@@ -108,10 +108,6 @@ ul {
     margin: $space-1 $space-0;
   }
 }
-a {
-  // text-decoration underline will overflow on the right if set to inline
-  display: inline-block;
-}
 
 /* Resume layout and section styling */
 
@@ -185,13 +181,28 @@ a {
 }
 
 .organization {
+  display: block;
+
+  > * {
+    display: inline;
+  }
+
   > *:nth-child(2)::before,
   > *:nth-child(2)::after {
     content: "—";
     padding: $space-0 $space-1;
   }
-  > *:last-child {
-    float: right;
+
+  @media (min-width: $phone-width) {
+    > *:last-child {
+      float: right;
+    }
+
+    &::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
   }
 
   .role {
