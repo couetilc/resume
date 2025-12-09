@@ -27,3 +27,9 @@ docker build \
   -f $root/Dockerfile $root &
 
 wait
+
+rm -rf "$root/dist/"
+
+docker create --name tmp-resume-dist resume:latest
+docker cp tmp-resume-dist:/app/dist "$root/dist"
+docker rm tmp-resume-dist
