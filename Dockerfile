@@ -35,8 +35,14 @@ COPY . .
 # ---------- Dev: development environment with hot-reloading ----------
 FROM base AS dev
 
+RUN apt-get update && apt-get install -y \
+  tini \
+  && rm -rf /var/lib/apt/lists/*
+
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
 EXPOSE 8080
-CMD ["npm", "run", "dev"]
+CMD ["./cli.js", "dev"]
 
 # ---------- Builder: runs webpack + Puppeteer to produce dist/ ----------
 FROM base AS builder

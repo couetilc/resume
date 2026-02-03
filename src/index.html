@@ -9,6 +9,16 @@
     <title>
       Résumé - CRC
     </title>
+    <style>
+    [class*="role:"] {
+      display: none;
+    }
+    <% if (typeof role !== 'undefined' && role) { %>
+    [class~="role:<%= role %>"] {
+      display: revert;
+    }
+    <% } %>
+    </style>
   </head>
 
   <body>
@@ -43,8 +53,11 @@
       </div>
 
       <p class="intro">
-        <em>
+        <em class="role:default">
           Seeking infrastructure role. Always learning, staying curious. Likes to talk to people. Experienced software engineer.
+        </em>
+        <em class="role:cloud-computing">
+          I turn ideas into deployable systems that are a joy to use. Passionate about innovative application development.
         </em>
       </p>
 

@@ -2,4 +2,4 @@
 docker run --rm -p 61000:61000 \
   -v $root:/app \
   -v /app/node_modules \
-  resume:dev
+  resume:dev ./cli.js dev $@

@@ -38,7 +38,7 @@ function parseCliArguments(argv = process.argv) {
           options.inFile = args[1];
           args.shift();
         } else {
-          dieWithHelp('ERROR: "--in" requires an non-empty argument.');
+          dieWithHelp('ERROR: "--in" requires a non-empty argument.');
         }
         break;
       case '--build':
@@ -46,7 +46,7 @@ function parseCliArguments(argv = process.argv) {
           options.buildDir = args[1];
           args.shift();
         } else {
-          dieWithHelp('ERROR: "--build" requires an non-empty argument.');
+          dieWithHelp('ERROR: "--build" requires a non-empty argument.');
         }
         break;
       case '--out':
@@ -54,7 +54,7 @@ function parseCliArguments(argv = process.argv) {
           options.outDir = args[1];
           args.shift();
         } else {
-          dieWithHelp('ERROR: "--out" requires an non-empty argument.');
+          dieWithHelp('ERROR: "--out" requires a non-empty argument.');
         }
         break;
       case '--public-url':
@@ -62,7 +62,15 @@ function parseCliArguments(argv = process.argv) {
           options.publicUrl = args[1];
           args.shift();
         } else {
-          dieWithHelp('ERROR: "--public-url" requires an non-empty argument.');
+          dieWithHelp('ERROR: "--public-url" requires a non-empty argument.');
+        }
+        break;
+      case '--role':
+        if (args[1]) {
+          options.role = args[1];
+          args.shift();
+        } else {
+          dieWithHelp('ERROR: "--role" requires a non-empty argument.');
         }
         break;
       default:
@@ -94,7 +102,7 @@ function help() {
   log(`
 Usage:
 
-  ${filename(process.argv[1])} <command> [--in ${ul('input-html-file')}] [--build ${ul('root-build-directory')}] [--out ${ul('output-html-directory')}] [--public-url ${ul('url-or-path')}] [-v|--verbose]
+  ${filename(process.argv[1])} <command> [--in ${ul('input-html-file')}] [--build ${ul('root-build-directory')}] [--out ${ul('output-html-directory')}] [--public-url ${ul('url-or-path')}] [--role ${ul('role')}] [-v|--verbose]
 
 Description:
 
@@ -117,6 +125,10 @@ Options:
                    relative to the root build directory. Defaults to ".".
   --public-url     URL or path where the resume's HTML/CSS/JS/IMG/PDF assets
                    will be hosted. Defaults to "/".
+  --role            Specify what version of the resume to build. A resume
+                   version varies based on the role (software engineer or
+                   product manager) as defined by CSS class names ("role:<role>")
+                   in the resume document.
   -v,--verbose     Enable debug logging.
 `)
 }

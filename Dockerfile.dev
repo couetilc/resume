@@ -1,7 +1,0 @@
-# ---------- Runtime: Caddy serving the built dist/ ----------
-FROM caddy:alpine AS runtime
-
-# Copy only the built assets
-COPY --from=resume:latest /app/dist /usr/share/caddy
-
-EXPOSE 80

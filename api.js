@@ -19,9 +19,9 @@ const PORT = 61000;
 const HOST = '0.0.0.0';
 
 const commands = {
-  dev({ inFile, buildDir, outDir, }) {
+  dev({ inFile, buildDir, outDir, role }) {
     const config = getWebpackConfig({
-      mode: 'development', inFile, buildDir, outDir,
+      mode: 'development', inFile, buildDir, outDir, role,
     });
     const compiler = webpack(config);
     const devServer = new WebpackDevServer(compiler, config.devServer);
@@ -37,9 +37,9 @@ const commands = {
     proc.on('close', code => process.exit(code));
     proc.on('error', err => err && console.error(err)); // eslint-disable-line no-console
   },
-  build({ inFile, buildDir, outDir, publicUrl }) {
+  build({ inFile, buildDir, outDir, publicUrl, role }) {
     const compiler = webpack(
-      getWebpackConfig({ inFile, buildDir, outDir, publicUrl })
+      getWebpackConfig({ inFile, buildDir, outDir, publicUrl, role })
     );
     compiler.run((err, stats) => {
       if (handleWebpackCompileErrors(err, stats)) {
@@ -76,6 +76,7 @@ function run(command, options = {}) {
     buildDir = 'dist',
     outDir = '.',
     publicUrl = '/',
+    role = 'default',
     verbose = 0,
   } = options;
 
@@ -83,10 +84,10 @@ function run(command, options = {}) {
 
   if (VERBOSE) {
     log('node version %o', process.version);
-    log('arguments: %o', { command, inFile, buildDir, outDir, publicUrl, verbose });
+    log('arguments: %o', { command, inFile, buildDir, outDir, publicUrl, role, verbose });
   }
 
-  return commands[command]({ inFile, buildDir, outDir, publicUrl, verbose });
+  return commands[command]({ inFile, buildDir, outDir, publicUrl, role, verbose });
 }
 
 class Timer {
@@ -164,7 +165,7 @@ function handleWebpackCompileErrors(err, stats) {
 }
 
 function getWebpackConfig({
-  mode = 'production', inFile, buildDir, outDir, publicUrl
+  mode = 'production', inFile, buildDir, outDir, publicUrl, role
 }) {
   return {
     entry: path.join(path.dirname(inFile), 'index.js'),
@@ -209,6 +210,7 @@ function getWebpackConfig({
         template: inFile,
         templateParameters: {
           publicUrl,
+          role,
         },
         inject: true,
       })
