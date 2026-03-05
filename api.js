@@ -67,6 +67,21 @@ const commands = {
     server.on('listening', () => {
       log('listening at %o', server.address());
     });
+  },
+  roles({ inFile }) {
+    const fs = require('fs');
+    const content = fs.readFileSync(inFile, 'utf-8');
+    const slugs = new Set();
+    const regex = /role:([a-z0-9-]+)/g;
+    let match;
+    while ((match = regex.exec(content)) !== null) {
+      slugs.add(match[1]);
+    }
+    const roles = Array.from(slugs).map(slug => ({
+      slug,
+      label: slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+    }));
+    process.stdout.write(JSON.stringify({ roles }));
   }
 }
 

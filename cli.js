@@ -115,6 +115,7 @@ Commands:
   build       generate an HTML and PDF file of the resume.
   test        run tests
   serve       start a web server to preview your files
+  roles       output JSON listing all role versions
 
 Options:
 
