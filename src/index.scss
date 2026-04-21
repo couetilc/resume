@@ -13,7 +13,11 @@
 
 /* Global Variables */
 
-$paper-width: 900px;
+// On-screen the PDF renders ~1.25× its CSS canvas (Retina/HiDPI display), so
+// the web canvas is scaled up by 1.25 to visually match the PDF side-by-side.
+// These values are used for the web view only; the PDF uses inch-based layout.
+$paper-width: 1020px;  // 8.5in × 1.25
+$paper-height: 1320px; // 11in × 1.25
 $phone-width: 568px;
 
 /* Design system */
@@ -45,13 +49,15 @@ $space-7: 2em;
 
 body {
     font-family: 'Helvetica', Arial, sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     display: flex;
     justify-content: center;
     margin: 0;
+    @media not print {
+      font-size: 17.5px; // 14px × 1.25, to visually match the PDF on HiDPI displays
+    }
     @media print {
       background-image: none;
-      font-size: 14px;
     }
     @media not print {
       background-image: url('./assets/bg_monet_optimized.jpg');
@@ -73,6 +79,8 @@ body {
       #resume {
         box-shadow: 3px 3px 4px 4px rgba(0,0,0,.6);
         max-width: $minBound;
+        min-height: $paper-height;
+        padding: 30px 60px; // .25in .5in × 1.25 to match the PDF visually
         box-sizing: border-box;
       }
     }
@@ -117,6 +125,7 @@ ul {
     box-shadow: none;
     width: 100%;
     padding: .25in .5in;
+    box-sizing: border-box;
 }
 
 /* component classes */
