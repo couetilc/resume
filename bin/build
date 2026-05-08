@@ -3,7 +3,17 @@ export DOCKER_BUILDKIT=1
 
 # Build all targets in parallel, sharing cache
 docker build \
+  --target base \
+  --cache-from resume:base \
+  --cache-from resume:latest \
+  --cache-from resume:dev \
+  --cache-from resume:runtime \
+  -t resume:base \
+  -f $root/Dockerfile $root &
+
+docker build \
   --target builder \
+  --cache-from resume:base \
   --cache-from resume:latest \
   --cache-from resume:dev \
   --cache-from resume:runtime \
@@ -12,6 +22,7 @@ docker build \
 
 docker build \
   --target dev \
+  --cache-from resume:base \
   --cache-from resume:latest \
   --cache-from resume:dev \
   --cache-from resume:runtime \
@@ -20,6 +31,7 @@ docker build \
 
 docker build \
   --target runtime \
+  --cache-from resume:base \
   --cache-from resume:latest \
   --cache-from resume:dev \
   --cache-from resume:runtime \
