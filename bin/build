@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+set -euo pipefail
+
+root="$(cd "$(dirname "$0")/.." && pwd)"
 export DOCKER_BUILDKIT=1
 
 # Build all targets in parallel, sharing cache
@@ -9,7 +12,7 @@ docker build \
   --cache-from resume:dev \
   --cache-from resume:runtime \
   -t resume:base \
-  -f $root/Dockerfile $root &
+  -f "$root/Dockerfile" "$root" &
 
 docker build \
   --target builder \
@@ -18,7 +21,7 @@ docker build \
   --cache-from resume:dev \
   --cache-from resume:runtime \
   -t resume:latest \
-  -f $root/Dockerfile $root &
+  -f "$root/Dockerfile" "$root" &
 
 docker build \
   --target dev \
@@ -27,7 +30,7 @@ docker build \
   --cache-from resume:dev \
   --cache-from resume:runtime \
   -t resume:dev \
-  -f $root/Dockerfile $root &
+  -f "$root/Dockerfile" "$root" &
 
 docker build \
   --target runtime \
@@ -36,7 +39,7 @@ docker build \
   --cache-from resume:dev \
   --cache-from resume:runtime \
   -t resume:runtime \
-  -f $root/Dockerfile $root &
+  -f "$root/Dockerfile" "$root" &
 
 wait
 
