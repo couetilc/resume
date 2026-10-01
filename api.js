@@ -189,6 +189,7 @@ function getWebpackConfig({
       path: path.resolve(buildDir, outDir),
       filename: 'index.js',
       publicPath: publicUrl,
+      hashFunction: 'xxhash64',
     },
     module: {
       rules: [
@@ -202,15 +203,7 @@ function getWebpackConfig({
         },
         {
           test: /\.(png|jpe?g|gif|webp|svg)$/ui,
-          use: [
-            'file-loader',
-            {
-              loader: 'image-webpack-loader',
-              options: {
-                disable: true,
-	      }
-            }
-          ],
+          type: 'asset/resource',
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/ui,

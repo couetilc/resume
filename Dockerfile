@@ -1,8 +1,6 @@
 # ---------- Base: shared dependencies and setup ----------
 FROM node:18-bullseye-slim AS base
 
-ENV NODE_OPTIONS=--openssl-legacy-provider
-
 # System Chromium + image tools used during build
 RUN apt-get update && apt-get install -y \
     chromium \
